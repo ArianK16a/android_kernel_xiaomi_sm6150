@@ -1,3 +1,18 @@
+ifeq ($(CONFIG_MACH_XIAOMI),y)
+ifeq ($(CONFIG_BUILD_ARM64_DT_OVERLAY),y)
+dtbo-$(CONFIG_MACH_XIAOMI_DAVINCI) += \
+	davinci-sdmmagpie-overlay.dtbo \
+	davinci_m0a-sdmmagpie-overlay.dtbo \
+	davinci_m0b-sdmmagpie-overlay.dtbo
+
+davinci-sdmmagpie-overlay.dtbo-base := sdmmagpie.dtb
+davinci_m0a-sdmmagpie-overlay.dtbo-base := sdmmagpie.dtb
+davinci_m0b-sdmmagpie-overlay.dtbo-base := sdmmagpie.dtb
+
+dtbo-$(CONFIG_MACH_XIAOMI_PHOENIX) += phoenix-sdmmagpie-overlay.dtbo
+phoenix-sdmmagpie-overlay.dtbo-base := sdmmagpie.dtb
+endif
+else
 # SPDX-License-Identifier: GPL-2.0
 dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb
 dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-db820c.dtb
@@ -352,6 +367,7 @@ dtb-$(CONFIG_ARCH_SDXPRAIRIE) += sdxprairie-rumi.dtb \
 	sa515m-ccard.dtb \
 	sa515m-ccard-pcie-ep.dtb \
 	sa515m-ccard-usb-ep.dtb
+endif
 
 ifeq ($(CONFIG_ARM64),y)
 always		:= $(dtb-y)
