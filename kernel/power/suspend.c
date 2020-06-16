@@ -389,6 +389,9 @@ void __weak arch_suspend_enable_irqs(void)
  *
  * This function should be called after devices have been suspended.
  */
+extern void system_sleep_status_print_enabled(void);
+extern void rpmh_status_print_enabled(void);
+extern void regulator_debug_print_enabled(bool only_enabled);
 static int suspend_enter(suspend_state_t state, bool *wakeup)
 {
 	char suspend_abort[MAX_SUSPEND_ABORT_LEN];
@@ -438,6 +441,9 @@ static int suspend_enter(suspend_state_t state, bool *wakeup)
 		goto Enable_cpus;
 	}
 
+	regulator_debug_print_enabled(true);
+	rpmh_status_print_enabled();
+	system_sleep_status_print_enabled();
 	arch_suspend_disable_irqs();
 	BUG_ON(!irqs_disabled());
 
