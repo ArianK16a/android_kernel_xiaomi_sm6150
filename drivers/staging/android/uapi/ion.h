@@ -32,6 +32,7 @@
  *				 is used to identify the heaps, so only 32
  *				 total heap types are supported
  */
+typedef int ion_user_handle_t;
 enum ion_heap_type {
 	ION_HEAP_TYPE_SYSTEM,
 	ION_HEAP_TYPE_SYSTEM_CONTIG,
