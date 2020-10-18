@@ -90,9 +90,6 @@
 #define GTP_GAME_CMD      0x0E
 #define GTP_EXIT_GAME_CMD 0x0F
 
-#define CONFIG_TOUCHSCREEN_GOODIX_DEBUG_FS
-
-
 /*
  * struct goodix_module - external modules container
  * @head: external modules list
@@ -475,7 +472,6 @@ struct goodix_ts_core {
 	bool fod_enabled;
 	int aod_status;
 	int fod_pressed;
-	int fod_test;
 	int double_wakeup;
 	int result_type;
 	struct class *gtp_tp_class;
@@ -485,10 +481,6 @@ struct goodix_ts_core {
 	struct work_struct sleep_work;
 	bool tp_already_suspend;
 	struct completion pm_resume_completion;
-#ifdef CONFIG_TOUCHSCREEN_GOODIX_DEBUG_FS
-	struct dentry *debugfs;
-#endif
-
 };
 
 struct goodix_mode_switch {
