@@ -796,12 +796,10 @@ static int goodix_ts_input_report(struct input_dev *dev,
 		core_data->fod_pressed = true;
 		ts_info("BTN_INFO press");
 	} else if (core_data->fod_pressed && (core_data->event_status & 0x88) != 0x88) {
-		if (unlikely(!core_data->fod_test)) {
-			input_report_key(core_data->input_dev, BTN_INFO, 0);
-			/*input_report_key(core_data->input_dev, KEY_INFO, 0);*/
-			ts_info("BTN_INFO release");
-			core_data->fod_pressed = false;
-		}
+		input_report_key(core_data->input_dev, BTN_INFO, 0);
+		/*input_report_key(core_data->input_dev, KEY_INFO, 0);*/
+		ts_info("BTN_INFO release");
+		core_data->fod_pressed = false;
 	}
 	mutex_unlock(&ts_dev->report_mutex);
 	input_sync(dev);
@@ -1203,43 +1201,6 @@ static ssize_t gtp_touch_suspend_notify_show(struct device *dev,
 {
 	return snprintf(buf, PAGE_SIZE, "%d\n", !!atomic_read(&goodix_core_data->suspend_stat));
 }
-
-static ssize_t gtp_fod_test_store(struct device *dev,
-				struct device_attribute *attr,
-				const char *buf, size_t count)
-{
-	int value = 0;
-	struct goodix_ts_core *core_data = dev_get_drvdata(dev);
-
-	ts_info("buf:%c,count:%zu\n", buf[0], count);
-	sscanf(buf, "%u", &value);
-	if (value) {
-		input_report_key(core_data->input_dev, BTN_INFO, 1);
-		/*input_report_key(core_data->input_dev, KEY_INFO, 1);*/
-		input_sync(core_data->input_dev);
-		input_mt_slot(core_data->input_dev, 0);
-		input_mt_report_slot_state(core_data->input_dev, MT_TOOL_FINGER, 1);
-		input_report_key(core_data->input_dev, BTN_TOUCH, 1);
-		input_report_key(core_data->input_dev, BTN_TOOL_FINGER, 1);
-		input_report_abs(core_data->input_dev, ABS_MT_TRACKING_ID, 0);
-		input_report_abs(core_data->input_dev, ABS_MT_POSITION_X, CENTER_X);
-		input_report_abs(core_data->input_dev, ABS_MT_POSITION_Y, CENTER_Y);
-		input_report_abs(core_data->input_dev, ABS_MT_WIDTH_MINOR, 8);
-		input_report_abs(core_data->input_dev, ABS_MT_WIDTH_MAJOR, 8);
-		input_sync(core_data->input_dev);
-	} else {
-		input_mt_slot(core_data->input_dev, 0);
-		input_mt_report_slot_state(core_data->input_dev, MT_TOOL_FINGER, 0);
-		input_report_abs(core_data->input_dev, ABS_MT_TRACKING_ID, -1);
-		input_report_key(core_data->input_dev, BTN_INFO, 0);
-		/*input_report_key(core_data->input_dev, KEY_INFO, 0);*/
-		input_sync(core_data->input_dev);
-	}
-	return count;
-}
-
-static DEVICE_ATTR(fod_test, (S_IRUGO | S_IWUSR | S_IWGRP),
-		NULL, gtp_fod_test_store);
 
 static DEVICE_ATTR(touch_suspend_notify, (S_IRUGO | S_IRGRP),
 			gtp_touch_suspend_notify_show, NULL);
@@ -1898,106 +1859,6 @@ static int goodix_ts_pm_resume(struct device *dev)
 #endif
 #endif
 
-
-#ifdef CONFIG_TOUCHSCREEN_GOODIX_DEBUG_FS
-/*
-static void tpdbg_shutdown(struct goodix_ts_core *core_data, bool sleep)
-{
-
-}
-*/
-
-static void tpdbg_suspend(struct goodix_ts_core *core_data, bool enable)
-{
-	if (enable)
-		queue_work(core_data->event_wq, &core_data->suspend_work);
-	else
-		queue_work(core_data->event_wq, &core_data->resume_work);
-}
-
-static int tpdbg_open(struct inode *inode, struct file *file)
-{
-	file->private_data = inode->i_private;
-
-	return 0;
-}
-
-static ssize_t tpdbg_read(struct file *file, char __user *buf, size_t size,
-			loff_t *ppos)
-{
-	const char *str = "cmd support as below:\n \
-				echo \"irq-disable\" or \"irq-enable\" to ctrl irq\n \
-				echo \"tp-suspend-en\" or \"tp-suspend-off\" to ctrl panel in or off suspend status\n";
-
-	loff_t pos = *ppos;
-	int len = strlen(str);
-
-	if (pos < 0)
-		return -EINVAL;
-	if (pos >= len)
-		return 0;
-
-	if (copy_to_user(buf, str, len))
-		return -EFAULT;
-
-	*ppos = pos + len;
-
-	return len;
-}
-
-static ssize_t tpdbg_write(struct file *file, const char __user *buf,
-			size_t size, loff_t *ppos)
-{
-	struct goodix_ts_core *core_data = file->private_data;
-	char *cmd = kzalloc(size + 1, GFP_KERNEL);
-	int ret = size;
-
-	if (!cmd)
-		return -ENOMEM;
-
-	if (copy_from_user(cmd, buf, size)) {
-		ret = -EFAULT;
-		goto out;
-	}
-
-	cmd[size] = '\0';
-
-	if (!strncmp(cmd, "irq-disable", 11))
-		goodix_ts_irq_enable(core_data, false);
-	else if (!strncmp(cmd, "irq-enable", 10))
-		goodix_ts_irq_enable(core_data, true);
-/*
-	else if (!strncmp(cmd, "tp-sd-en", 8))
-		tpdbg_shutdown(core_data, true);
-	else if (!strncmp(cmd, "tp-sd-off", 9))
-		tpdbg_shutdown(core_data, false);
-*/
-	else if (!strncmp(cmd, "tp-suspend-en", 13))
-		tpdbg_suspend(core_data, true);
-	else if (!strncmp(cmd, "tp-suspend-off", 14))
-		tpdbg_suspend(core_data, false);
-out:
-	kfree(cmd);
-
-	return ret;
-}
-
-static int tpdbg_release(struct inode *inode, struct file *file)
-{
-	file->private_data = NULL;
-
-	return 0;
-}
-
-static const struct file_operations tpdbg_operations = {
-	.owner = THIS_MODULE,
-	.open = tpdbg_open,
-	.read = tpdbg_read,
-	.write = tpdbg_write,
-	.release = tpdbg_release,
-};
-#endif
-
 /**
  * goodix_generic_noti_callback - generic notifier callback
  *  for goodix touch notification event.
@@ -2541,22 +2402,9 @@ static int goodix_ts_probe(struct platform_device *pdev)
 		goto out;
 	}
 
-	if (sysfs_create_file(&core_data->gtp_touch_dev->kobj,
-				  &dev_attr_fod_test.attr)) {
-		ts_err("Failed to create fod_test sysfs group!");
-		goto out;
-	}
-
 	core_data->fod_status = -1;
 	core_data->fod_enabled = false;
 	//wake_lock_init(&core_data->tp_wakelock, WAKE_LOCK_SUSPEND, "touch_locker");
-#ifdef CONFIG_TOUCHSCREEN_GOODIX_DEBUG_FS
-	core_data->debugfs = debugfs_create_dir("tp_debug", NULL);
-	if (core_data->debugfs) {
-		debugfs_create_file("switch_state", 0660, core_data->debugfs, core_data,
-					&tpdbg_operations);
-	}
-#endif
 #ifdef CONFIG_TOUCHSCREEN_XIAOMI_TOUCHFEATURE
 		memset(&xiaomi_touch_interfaces, 0x00, sizeof(struct xiaomi_touch_interface));
 		xiaomi_touch_interfaces.getModeValue = gtp_get_mode_value;
