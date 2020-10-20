@@ -16,6 +16,7 @@
  * Boston, MA 021110-1307, USA.
  */
 #include <linux/sched.h>
+#include <linux/sched/mm.h>
 #include <linux/bio.h>
 #include <linux/slab.h>
 #include <linux/buffer_head.h>
@@ -4174,6 +4175,7 @@ static int btrfs_uuid_scan_kthread(void *data)
 			goto skip;
 		}
 update_tree:
+		btrfs_release_path(path);
 		if (!btrfs_is_empty_uuid(root_item.uuid)) {
 			ret = btrfs_uuid_tree_add(trans, fs_info,
 						  root_item.uuid,
@@ -4199,6 +4201,7 @@ update_tree:
 		}
 
 skip:
+		btrfs_release_path(path);
 		if (trans) {
 			ret = btrfs_end_transaction(trans);
 			trans = NULL;
@@ -4206,7 +4209,6 @@ skip:
 				break;
 		}
 
-		btrfs_release_path(path);
 		if (key.offset < (u64)-1) {
 			key.offset++;
 		} else if (key.type < BTRFS_ROOT_ITEM_KEY) {
@@ -4851,6 +4853,7 @@ static int __btrfs_alloc_chunk(struct btrfs_trans_handle *trans,
 	for (i = 0; i < map->num_stripes; i++) {
 		num_bytes = map->stripes[i].dev->bytes_used + stripe_size;
 		btrfs_device_set_bytes_used(map->stripes[i].dev, num_bytes);
+		map->stripes[i].dev->has_pending_chunks = true;
 	}
 
 	atomic64_sub(stripe_size * map->num_stripes, &info->free_chunk_space);
@@ -5018,8 +5021,7 @@ static inline int btrfs_chunk_max_errors(struct map_lookup *map)
 
 	if (map->type & (BTRFS_BLOCK_GROUP_RAID1 |
 			 BTRFS_BLOCK_GROUP_RAID10 |
-			 BTRFS_BLOCK_GROUP_RAID5 |
-			 BTRFS_BLOCK_GROUP_DUP)) {
+			 BTRFS_BLOCK_GROUP_RAID5)) {
 		max_errors = 1;
 	} else if (map->type & BTRFS_BLOCK_GROUP_RAID6) {
 		max_errors = 2;
@@ -6277,8 +6279,17 @@ static struct btrfs_device *add_missing_dev(struct btrfs_fs_devices *fs_devices,
 					    u64 devid, u8 *dev_uuid)
 {
 	struct btrfs_device *device;
+	unsigned int nofs_flag;
 
+	/*
+	 * We call this under the chunk_mutex, so we want to use NOFS for this
+	 * allocation, however we don't want to change btrfs_alloc_device() to
+	 * always do NOFS because we use it in a lot of other GFP_KERNEL safe
+	 * places.
+	 */
+	nofs_flag = memalloc_nofs_save();
 	device = btrfs_alloc_device(NULL, &devid, dev_uuid);
+	memalloc_nofs_restore(nofs_flag);
 	if (IS_ERR(device))
 		return NULL;
 
@@ -6902,6 +6913,14 @@ int btrfs_read_chunk_tree(struct btrfs_fs_info *fs_info)
 	mutex_lock(&fs_info->chunk_mutex);
 
 	/*
+	 * It is possible for mount and umount to race in such a way that
+	 * we execute this code path, but open_fs_devices failed to clear
+	 * total_rw_bytes. We certainly want it cleared before reading the
+	 * device items, so clear it here.
+	 */
+	fs_info->fs_devices->total_rw_bytes = 0;
+
+	/*
 	 * Read all device items, and then all the chunk items. All
 	 * device items are found before any chunk item (their object id
 	 * is smaller than the lowest possible object id for a chunk
@@ -7227,6 +7246,8 @@ int btrfs_get_dev_stats(struct btrfs_fs_info *fs_info,
 			else
 				btrfs_dev_stat_reset(dev, i);
 		}
+		btrfs_info(fs_info, "device stats zeroed by %s (%d)",
+			   current->comm, task_pid_nr(current));
 	} else {
 		for (i = 0; i < BTRFS_DEV_STAT_VALUES_MAX; i++)
 			if (stats->nr_items > i)
@@ -7310,6 +7331,7 @@ void btrfs_update_commit_device_bytes_used(struct btrfs_fs_info *fs_info,
 		for (i = 0; i < map->num_stripes; i++) {
 			dev = map->stripes[i].dev;
 			dev->commit_bytes_used = dev->bytes_used;
+			dev->has_pending_chunks = false;
 		}
 	}
 	mutex_unlock(&fs_info->chunk_mutex);
