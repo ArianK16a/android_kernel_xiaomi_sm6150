@@ -624,13 +624,16 @@ static int dsi_panel_update_backlight(struct dsi_panel *panel,
 
 	dsi = &panel->mipi_device;
 
+	if (rc < 0)
+		pr_err("failed to update dcs backlight:%d\n", bl_lvl);
+
 	if (panel->bl_config.dcs_type_ss_ea || panel->bl_config.dcs_type_ss_eb)
 		rc = mipi_dsi_dcs_set_display_brightness_ss(dsi, bl_lvl);
 	else
 		rc = mipi_dsi_dcs_set_display_brightness(dsi, bl_lvl);
 
-	if (rc < 0)
-		pr_err("failed to update dcs backlight:%d\n", bl_lvl);
+	if (panel->bl_config.bl_inverted_dbv)
+		bl_lvl = (((bl_lvl & 0xff) << 8) | (bl_lvl >> 8));
 
 	return rc;
 }
@@ -2511,6 +2514,9 @@ static int dsi_panel_parse_bl_config(struct dsi_panel *panel)
 	} else {
 		panel->bl_config.brightness_default_level = val;
 	}
+
+	panel->bl_config.bl_inverted_dbv = utils->read_bool(utils->data,
+		"qcom,mdss-dsi-bl-inverted-dbv");
 
 	rc = utils->read_u32(utils->data,
 			"qcom,disp-doze-lpm-backlight", &val);
