@@ -111,12 +111,13 @@ void ea_panel_mode_ctrl(struct dsi_panel *panel, bool enable)
 	}
 }
 
-u32 ea_panel_calc_backlight(u32 bl_lvl)
+u32 ea_panel_calc_backlight(u32 bl_lvl, u32 bl_lvl_min)
 {
-	last_level = bl_lvl;
+	u32 ea_bl_lvl = bl_lvl < bl_lvl_min * 2 ? bl_lvl_min * 2 : bl_lvl;
+	last_level = ea_bl_lvl;
 
-	if (pcc_backlight_enable && bl_lvl != 0 && bl_lvl < ELVSS_OFF_THRESHOLD) {
-		if (ea_panel_send_pcc(bl_lvl))
+	if (pcc_backlight_enable && ea_bl_lvl != 0 && ea_bl_lvl < ELVSS_OFF_THRESHOLD) {
+		if (ea_panel_send_pcc(ea_bl_lvl))
 			pr_err("ERROR: Failed to send PCC\n");
 
 		return ELVSS_OFF_THRESHOLD;
