@@ -2,7 +2,7 @@
  * Goodix GTX5 Firmware Update Driver.
  *
  * Copyright (C) 2015 - 2016 Goodix, Inc.
- * Copyright (C) 2020 XiaoMi, Inc.
+ * Copyright (C) 2021 XiaoMi, Inc.
  * Authors:  Yulong Cai <caiyulong@goodix.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -283,16 +283,16 @@ static int goodix_check_update(struct goodix_ts_device *dev,
 		return r;
 
 	if (fw_ver.valid) {
-		ts_info("pid_len=%d\n", dev->reg.pid_len);
-		ts_info("tp.pid=%s fw.pid=%s\n", fw_ver.pid,fw_info->fw_pid);
+		ts_info("pid_len=%d\n",dev->reg.pid_len);
+		ts_info("tp.pid=%s fw.pid=%s\n",fw_ver.pid,fw_info->fw_pid);
 		if (memcmp(fw_ver.pid, fw_info->fw_pid, dev->reg.pid_len)) {
-			ts_err("tp.pid=0x%x fw.pid=0x%x\n", fw_ver.pid,fw_info->fw_pid);
+			ts_err("tp.pid=0x%x fw.pid=0x%x\n",fw_ver.pid,fw_info->fw_pid);
 			ts_err("Product ID is not match");
 			return -EPERM;
 		}
 
-		ts_info("vid_len=%d\n", dev->reg.vid_len);
-		ts_info("Touchpanel VID:0x%02x 0x%02x 0x%02x 0x%02x", fw_ver.vid[0], fw_ver.vid[1], fw_ver.vid[2], fw_ver.vid[3]);
+		ts_info("vid_len=%d\n",dev->reg.vid_len);
+		ts_info("Touchpanel VID:0x%02x 0x%02x 0x%02x 0x%02x",fw_ver.vid[0], fw_ver.vid[1], fw_ver.vid[2], fw_ver.vid[3]);
 		ts_info("Fimware    VID:0x%02X 0x%02x 0x%02x 0x%02x", fw_info->fw_vid[0], fw_info->fw_vid[1], fw_info->fw_vid[2], fw_info->fw_vid[3]);
 		res = memcmp(fw_ver.vid, fw_info->fw_vid, dev->reg.vid_len);
 		if (res == 0) {
@@ -1266,10 +1266,10 @@ static int goodix_fw_update_init(struct goodix_ts_core *core_data,
 	fwu_ctrl->core_data = core_data;
 
 	/* find a valid firmware image name */
-	if (ts_bdata && ts_bdata->fw_name) {
+	if (ts_bdata && ts_bdata->fw_name){
 		strlcpy(fwu_ctrl->fw_name, ts_bdata->fw_name, sizeof(fwu_ctrl->fw_name));
-		ts_info("find goodix firmware:%s\n", ts_bdata->fw_name);
-	} else {
+		ts_info("find goodix firmware:%s\n",ts_bdata->fw_name);
+	}else{
 		strlcpy(fwu_ctrl->fw_name, TS_DEFAULT_FIRMWARE, sizeof(fwu_ctrl->fw_name));
 		ts_info("can't find goodix firmware,use default name\n");
 	}

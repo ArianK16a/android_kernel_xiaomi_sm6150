@@ -3,7 +3,7 @@
   * Core layer of touchdriver architecture.
   *
   * Copyright (C) 2015 - 2016 Goodix, Inc.
-  * Copyright (C) 2020 XiaoMi, Inc.
+  * Copyright (C) 2021 XiaoMi, Inc.
   * Authors:  Yulong Cai <caiyulong@goodix.com>
   *
   * This program is free software; you can redistribute it and/or modify
@@ -527,7 +527,7 @@ static ssize_t goodix_ts_send_cfg_store(struct device *dev,
 	const struct firmware *cfg_img;
 	struct goodix_ts_config *config = NULL;
 
-	ts_err("%s::enter\n", __func__);
+	ts_err("%s::enter\n",__func__);
 	if (sscanf(buf, "%d", &en) != 1)
 		return -EINVAL;
 
@@ -1146,7 +1146,7 @@ int goodix_ts_power_on(struct goodix_ts_core *core_data)
 	struct goodix_ts_board_data *ts_bdata = board_data(core_data);
 	int r = 0;
 
-	ts_err("enter::%s\n", __func__);
+	ts_err("enter::%s\n",__func__);
 	if (core_data->power_on)
 		return 0;
 
@@ -1163,12 +1163,12 @@ int goodix_ts_power_on(struct goodix_ts_core *core_data)
 
 
 	if (core_data->avdd) {
-		if (core_data->avdd_load) {
-			r = regulator_set_load(core_data->avdd, core_data->avdd_load);
-			if (r<0)
+		if (core_data->avdd_load){
+			r=regulator_set_load(core_data->avdd, core_data->avdd_load);
+			if(r<0)
 				ts_err("enable 3v3 fail!");
-			r=regulator_set_voltage(core_data->avdd, 3000000, 3000000);
-			if (r<0)
+			r=regulator_set_voltage(core_data->avdd,3000000,3000000);
+			if(r<0)
 				ts_err("enable 3v3 fail!");
 		}
 		r = regulator_enable(core_data->avdd);
@@ -1365,7 +1365,6 @@ static void goodix_switch_mode_work(struct work_struct *work)
 
 	struct goodix_ts_core *info = ms->info;
 	unsigned char value = ms->mode;
-
 	if (value >= INPUT_EVENT_WAKUP_MODE_OFF
 		&& value <= INPUT_EVENT_WAKUP_MODE_ON) {
 		info->double_wakeup = value - INPUT_EVENT_WAKUP_MODE_OFF;
@@ -2244,8 +2243,8 @@ static int gtp_i2c_test(void)
 	}
 }
 
-static ssize_t gtp_selftest_read(struct file *file, char __user *buf,
-				size_t count, loff_t *pos)
+static ssize_t gtp_selftest_read(struct file *file, char __user * buf,
+				size_t count, loff_t * pos)
 {
 	char tmp[5] = { 0 };
 	int cnt;
@@ -2287,8 +2286,8 @@ static int gtp_short_open_test(void)
 	ts_info("test finish!");
 	return GTP_RESULT_FAIL;
 }
-static ssize_t gtp_selftest_write(struct file *file, const char __user *buf,
-				size_t count, loff_t *pos)
+static ssize_t gtp_selftest_write(struct file *file, const char __user * buf,
+				size_t count, loff_t * pos)
 {
 	int retval = 0;
 	char tmp[6];

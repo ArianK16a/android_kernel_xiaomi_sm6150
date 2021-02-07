@@ -2,7 +2,7 @@
  * Node get functions for Mini-XML, a small XML file parsing library.
  *
  * Copyright 2014-2017 by Michael R Sweet.
- * Copyright (C) 2020 XiaoMi, Inc.
+ * Copyright (C) 2021 XiaoMi, Inc.
  *
  * These coded instructions, statements, and computer programs are the
  * property of Michael R Sweet and are protected by Federal copyright
