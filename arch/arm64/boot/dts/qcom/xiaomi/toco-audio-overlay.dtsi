@@ -25,6 +25,7 @@
 		"MIC BIAS1", "Analog Mic1",
 		"AMIC3", "MIC BIAS3",
 		"MIC BIAS3", "Analog Mic3",
+		"AMIC4", "MIC BIAS3",
 		"TX_AIF1 CAP", "VA_MCLK",
 		"TX_AIF2 CAP", "VA_MCLK",
 		"RX AIF1 PB", "VA_MCLK",
@@ -39,6 +40,7 @@
 		"IN3_AUX", "AUX_OUT",
 		"TX SWR_ADC0", "ADC1_OUTPUT",
 		"TX SWR_ADC2", "ADC2_OUTPUT",
+		"TX SWR_ADC3", "ADC3_OUTPUT",
 		"RX_TX DEC0_INP", "TX DEC0 MUX",
 		"RX_TX DEC1_INP", "TX DEC1 MUX",
 		"RX_TX DEC2_INP", "TX DEC2 MUX",
@@ -104,11 +106,11 @@
 	status = "disabled";
 };
 
-&qupv3_se4_i2c {
+&qupv3_se9_i2c {
 	status = "ok";
 	tfa98xx@34 {
 		compatible = "nxp,tfa98xx";
-		reset-gpio = <&tlmm 67 0>;
+		reset-gpio = <&tlmm 12 0>;
 		irq-gpio = <&tlmm 56 0>;
 		interrupt-parent = <&tlmm>;
 		interrupts = <56 0>;
@@ -124,5 +126,6 @@
 &wcd937x_codec {
 	compatible = "qcom,wcd937x-codec";
 	qcom,cdc-micbias1-mv = <2750>;
+	qcom,cdc-micbias2-mv = <2750>;
 	qcom,cdc-micbias3-mv = <2750>;
 };

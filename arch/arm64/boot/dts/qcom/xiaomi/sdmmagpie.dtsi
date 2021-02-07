@@ -1,5 +1,5 @@
 /* Copyright (c) 2018, The Linux Foundation. All rights reserved.
- * Copyright (C) 2020 XiaoMi, Inc.
+ * Copyright (C) 2021 XiaoMi, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -16,6 +16,7 @@
 #include <dt-bindings/iio/qcom,spmi-vadc.h>
 #include <dt-bindings/input/input.h>
 #include <dt-bindings/input/qcom,qpnp-power-on.h>
+#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
 
 #include "../sdmmagpie-thermal-overlay.dtsi"
 
@@ -131,7 +132,7 @@
 	pinctrl-0 = <&sdc2_clk_on  &sdc2_cmd_on &sdc2_data_on &sdc2_cd_on>;
 	pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off &sdc2_cd_off>;
 
-	//cd-gpios = <&tlmm 69 GPIO_ACTIVE_HIGH>;
+	cd-gpios = <&tlmm 69 GPIO_ACTIVE_HIGH>;
 
 	status = "disabled";
 };
@@ -168,10 +169,6 @@
 	};
 };
 
-&fsa4480 {
-		status = "disabled";
-};
-
 &reserved_memory {
 		ramdump_fb_mem: ramdump_fb_region@af000000 {
 			compatible = "removed-dma-pool";
@@ -186,38 +183,26 @@
 		};
 };
 
-&pil_modem_mem {
-	reg = <0 0x8b000000 0 0x7e00000>;
-};
-
-&pil_video_mem {
-	reg = <0 0x92e00000 0 0x500000>;
-};
-
-&pil_cdsp_mem {
-	reg = <0 0x93300000 0 0x1e00000>;
-};
-
 &pil_adsp_mem {
-	reg = <0 0x95100000 0 0x2600000>;
+	reg = <0 0x95700000 0 0x2600000>;
 };
 
 &wlan_msa_mem {
-	reg = <0 0x97700000 0 0x180000>;
+	reg = <0 0x97d00000 0 0x180000>;
 };
 
 &npu_mem {
-	reg = <0 0x97880000 0 0x80000>;
+	reg = <0 0x97e80000 0 0x80000>;
 };
 
 &pil_ipa_fw_mem {
-	reg = <0 0x97900000 0 0x10000>;
+	reg = <0 0x97f00000 0 0x10000>;
 };
 
 &pil_ipa_gsi_mem {
-	reg = <0 0x97910000 0 0x5000>;
+	reg = <0 0x97f10000 0 0x5000>;
 };
 
 &pil_gpu_mem {
-	reg = <0 0x97915000 0 0x2000>;
+	reg = <0 0x97f15000 0 0x2000>;
 };
