@@ -18,7 +18,7 @@
  *
  *
  * Copyright (c) 2015 Fingerprint Cards AB <tech@fingerprints.com>
- * Copyright (C) 2020 XiaoMi, Inc.
+ * Copyright (C) 2021 XiaoMi, Inc.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License Version 2
@@ -123,7 +123,7 @@ static int reset_gpio_res(struct fpc1020_data *fpc1020);
  *
  */
 static int request_vreg_gpio(struct fpc1020_data *fpc1020, bool enable);
-static int irq_setup(struct fpc1020_data *fpc1020, bool enable);
+static int irq_setup(struct fpc1020_data * fpc1020, bool enable);
 static int vreg_setup(struct fpc1020_data *fpc1020, const char *name, bool enable);
 static int device_prepare(struct fpc1020_data *fpc1020, bool enable);
 static irqreturn_t fpc1020_irq_handler(int irq, void *handle);
@@ -135,9 +135,9 @@ static int hw_reset(struct  fpc1020_data *fpc1020);
 static int reset_gpio_res(struct fpc1020_data *fpc1020)
 {
 	int rc = 0;
-	struct device *dev;
+	struct device * dev;
 
-	if (!fpc1020) {
+	if(!fpc1020){
 		rc = -ENOMEM;
 		printk("fpc %s: failed to allocate memory for struct fpc1020_data!\n", __func__);
 		return rc;
@@ -164,13 +164,13 @@ static int request_vreg_gpio(struct fpc1020_data *fpc1020, bool enable)
 	mutex_lock(&fpc1020->lock);
 
 	/* if gpio has been occupied, release */
-	if (gpio_is_valid(fpc1020->vdd1v8_gpio)) {
+	if (gpio_is_valid(fpc1020->vdd1v8_gpio)){
 
 			dev_info(dev, "fpc vdd1v8 gpio is occupied at %d, release first!\n", fpc1020->vdd1v8_gpio);
 			devm_gpio_free(dev, fpc1020->vdd1v8_gpio);
 		}
 
-	if (gpio_is_valid(fpc1020->irq_gpio)) {
+	if(gpio_is_valid(fpc1020->irq_gpio)){
 
 		dev_info(dev, "fpc irq gpio is occupied at %d, release first!\n", fpc1020->irq_gpio);
 		devm_gpio_free(dev, fpc1020->irq_gpio);
@@ -193,7 +193,8 @@ static int request_vreg_gpio(struct fpc1020_data *fpc1020, bool enable)
 		if (rc) {
 			pr_err("fpc irq gpio request failed!\n");
 			goto release_irq_gpio;
-		} else {
+		}
+		else{
 			dev_info(dev, "fpc irq gpio applied at  %d\n", fpc1020->irq_gpio);
 		}
 		dev_info(dev, "fpc irq gpio requested successfully!\n");
@@ -239,10 +240,10 @@ release_vreg_gpio:
 
 exit:   mutex_unlock(&fpc1020->lock);
 		dev_info(dev, "fpc %s <---: exit!\n", __func__);
-		return rc;
+	    return rc;
 }
 
-static int irq_setup(struct fpc1020_data *fpc1020, bool enable){
+static int irq_setup(struct fpc1020_data *fpc1020,bool enable){
 
 	int rc = 0;
 
@@ -720,8 +721,6 @@ static ssize_t vendor_update(struct device *dev,
 	const char *buf, size_t count)
 {
 	int rc;
-	//rc = add_hw_component_info(HWMON_CONPONENT_NAME, "ic_vendor", (char *)buf);
-	//rc = add_hw_component_info(HWMON_CONPONENT_NAME, "reserve", "0xFFFF");
 	return rc ? rc : count;
 }
 static DEVICE_ATTR(vendor, S_IWUSR, NULL, vendor_update);
