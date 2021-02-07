@@ -17,13 +17,13 @@
 #include <dt-bindings/interrupt-controller/arm-gic.h>
 #include <dt-bindings/clock/qcom,camcc-sdmmagpie.h>
 
-#include "xiaomi/davinci-audio-overlay.dtsi"
-#include "xiaomi/davinci-sdmmagpie.dtsi"
-#include "xiaomi/davinci-nfc-overlay.dtsi"
+#include "xiaomi/toco-audio-overlay.dtsi"
+#include "xiaomi/toco-sdmmagpie.dtsi"
+#include "xiaomi/sdmmagpie-nfc-overlay.dtsi"
 
 / {
-	model = "DAVINCI";
+	model = "TOCO";
 	compatible = "qcom,sdmmagpie-qrd", "qcom,sdmmagpie", "qcom,qrd";
 	qcom,msm-id = <365 0x0>;
-	qcom,board-id = <39 0>;
+	qcom,board-id = <44 0>;
 };

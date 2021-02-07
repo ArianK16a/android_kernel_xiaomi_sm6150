@@ -1,5 +1,5 @@
 /* Copyright (c) 2019, The Linux Foundation. All rights reserved.
- * Copyright (C) 2020 XiaoMi, Inc.
+ * Copyright (C) 2021 XiaoMi, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -44,8 +44,8 @@
 		qcom,mdss-dsi-mdp-trigger = "none";
 		qcom,mdss-dsi-bl-dcs-type-ss-eb;
 		qcom,mdss-dsi-reset-sequence = <0 1>, <1 10>;
-		qcom,mdss-pan-physical-width-dimension = <68>;
-		qcom,mdss-pan-physical-height-dimension = <147>;
+		qcom,mdss-pan-physical-width-dimension = <680>;
+		qcom,mdss-pan-physical-height-dimension = <1470>;
 		qcom,mdss-dsi-te-pin-select = <1>;
 		qcom,mdss-dsi-wr-mem-start = <0x2c>;
 		qcom,mdss-dsi-wr-mem-continue = <0x3c>;
@@ -60,6 +60,7 @@
 		qcom,mdss-dsi-panel-blackness-level = <3230>;
 
 		qcom,dispparam-enabled;
+		qcom,mdss-dsi-panel-fod-dimlayer-enabled;
 		/* IRQF_ONESHOT | IRQF_TRIGGER_FALLING */
 		qcom,esd-err-irq-gpio = <&tlmm 32 0x2002>;
 
@@ -116,7 +117,7 @@
 					39 01 00 00 00 00 02 53 20];
 				qcom,mdss-dsi-dispparam-hbm-fod-off-command-state = "dsi_hs_mode";
 				qcom,mdss-dsi-dispparam-hbm-fod-on-command = [
-					39 00 00 00 00 00 02 88 00
+					39 01 00 00 03 00 02 88 00
 					39 01 00 00 00 00 02 53 E0];
 				qcom,mdss-dsi-dispparam-hbm-fod-on-command-state = "dsi_hs_mode";
 
