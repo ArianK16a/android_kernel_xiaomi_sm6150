@@ -11,7 +11,7 @@
  * GNU General Public License for more details.
  */
 #include "phoenix-sdmmagpie-pinctrl.dtsi"
-#include "xiaomi-sdmmagpie-common.dtsi"
+#include "sdmmagpie.dtsi"
 #include "phoenix-sdmmagpie-camera-sensor.dtsi"
 
 &dsi_panel_pwr_supply {
@@ -83,24 +83,24 @@
 		fp-gpio-pwr = <&tlmm 63 0>;
 		status = "ok";
 	};
-       fingerprint_fpc {
-               status = "ok";
-               compatible = "fpc,fpc1020";
-               interrupt-parent = <&tlmm>;
-               interrupts = <57 0x0>;
-               fpc,gpio_rst    = <&tlmm 58 0x0>;
-               fpc,gpio_irq    = <&tlmm 57 0x0>;
-               fpc,gpio_vdd1v8 = <&tlmm 63 0>;
-               pinctrl-names = "fpc1020_reset_reset",
-                       "fpc1020_reset_active",
-                       "fpc1020_irq_active";
+	fingerprint_fpc {
+		 status = "ok";
+		 compatible = "fpc,fpc1020";
+		 interrupt-parent = <&tlmm>;
+		 interrupts = <57 0x0>;
+		 fpc,gpio_rst    = <&tlmm 58 0x0>;
+		 fpc,gpio_irq    = <&tlmm 57 0x0>;
+		 fpc,gpio_vdd1v8 = <&tlmm 63 0>;
+		 pinctrl-names = "fpc1020_reset_reset",
+				"fpc1020_reset_active",
+				"fpc1020_irq_active";
 
-               pinctrl-0 = <&msm_gpio_58>;
-               pinctrl-1 = <&msm_gpio_58_output_high>;
-               pinctrl-2 = <&msm_gpio_57>;
+		 pinctrl-0 = <&msm_gpio_58>;
+		 pinctrl-1 = <&msm_gpio_58_output_high>;
+		 pinctrl-2 = <&msm_gpio_57>;
 
-       };
-       mtp_batterydata: qcom,battery-data {
+	};
+	mtp_batterydata: qcom,battery-data {
 		qcom,batt-id-range-pct = <15>;
 		#include "batterydata-phoenix-G7BNVTBM4P-4500mah.dtsi"
 		#include "batterydata-phoenix-G7BSWDBM4P-4500mah.dtsi"
@@ -136,49 +136,49 @@
 };
 
 &tlmm {
-        /* GPIO_58 : FP_RESET_N */
-        msm_gpio_58: msm_gpio_58 {
-                mux {
-                         pins = "gpio58";
-                         function = "gpio";
-                };
+	/* GPIO_58 : FP_RESET_N */
+	msm_gpio_58: msm_gpio_58 {
+		mux {
+			pins = "gpio58";
+			function = "gpio";
+		};
 
-                config {
-                        pins = "gpio58";
-                        drive-strength = <2>;
-                        bias-disable;
-                        output-low;
-                };
-        };
+		config {
+			pins = "gpio58";
+			drive-strength = <2>;
+			bias-disable;
+			output-low;
+		};
+	};
 
-        /* GPIO_58 : FP_RESET_N, state device active*/
-        msm_gpio_58_output_high: msm_gpio_58_output_high {
-                mux {
-                        pins = "gpio58";
-                        function = "gpio";
-                };
+	/* GPIO_58 : FP_RESET_N, state device active*/
+	msm_gpio_58_output_high: msm_gpio_58_output_high {
+		mux {
+			pins = "gpio58";
+			function = "gpio";
+		};
 
-                config {
-                        pins = "gpio58";
-                        drive-strength = <2>;
-                        bias-disable;
-                        output-high;
-                };
-        };
+		config {
+			pins = "gpio58";
+			drive-strength = <2>;
+			bias-disable;
+			 output-high;
+		};
+	};
 
-        /* GPIO_57 : FP_INT_N */
-        msm_gpio_57: msm_gpio_57 {
-                mux {
-                        pins = "gpio57";
-                        function = "gpio";
-                };
+	/* GPIO_57 : FP_INT_N */
+	msm_gpio_57: msm_gpio_57 {
+		mux {
+			pins = "gpio57";
+			function = "gpio";
+		};
 
-                config {
-                        pins = "gpio57";
-                        drive-strength = <2>;
-                        bias-pull-down;
-                };
-        };
+		config {
+			pins = "gpio57";
+			drive-strength = <2>;
+			bias-pull-down;
+		};
+	};
 };
 
 #include "novatek-nt36xxx-spi.dtsi"
@@ -222,19 +222,19 @@
 
 &pm6150_charger {
 	io-channels = <&pm6150_vadc ADC_USB_IN_V_16>,
-		      <&pm6150_vadc ADC_USB_IN_I>,
-		      <&pm6150_vadc ADC_CHG_TEMP>,
-		      <&pm6150_vadc ADC_DIE_TEMP>,
-		      <&pm6150l_vadc ADC_AMUX_THM1_PU2>,
-		      <&pm6150_vadc ADC_SBUx>,
-		      <&pm6150_vadc ADC_VPH_PWR>;
+			<&pm6150_vadc ADC_USB_IN_I>,
+			<&pm6150_vadc ADC_CHG_TEMP>,
+			<&pm6150_vadc ADC_DIE_TEMP>,
+			<&pm6150l_vadc ADC_AMUX_THM1_PU2>,
+			<&pm6150_vadc ADC_SBUx>,
+			<&pm6150_vadc ADC_VPH_PWR>;
 	io-channel-names = "usb_in_voltage",
-			   "usb_in_current",
-			   "chg_temp",
-			   "die_temp",
-			   "conn_temp",
-			   "sbux_res",
-			   "vph_voltage";
+			"usb_in_current",
+			"chg_temp",
+			"die_temp",
+			"conn_temp",
+			"sbux_res",
+			"vph_voltage";
 	qcom,battery-data = <&mtp_batterydata>;
 	qcom,usb-icl-ua = <3000000>;
 	qcom,fcc-max-ua = <5500000>;
@@ -305,21 +305,21 @@
 };
 
 &pm6150_gpios {
-    smb_stat {
-        smb_stat_default: smb_stat_default {
-            pins = "gpio3";
-            function = "normal";
-            input-enable;
-            bias-pull-up;
-            qcom,pull-up-strength = <PMIC_GPIO_PULL_UP_30>;
-            power-source = <0>;
-        };
-    };
+	smb_stat {
+		smb_stat_default: smb_stat_default {
+			pins = "gpio3";
+			function = "normal";
+			input-enable;
+			bias-pull-up;
+			qcom,pull-up-strength = <PMIC_GPIO_PULL_UP_30>;
+			power-source = <0>;
+		};
+	};
 };
 
 &qupv3_se9_i2c {
 	status = "ok";
-	#include "smb1390.dtsi"
+	#include "../smb1390.dtsi"
 };
 
 &smb1390 {
@@ -591,64 +591,67 @@
 	};
 };
 
-&blue_led {
-	label = "white";
-};
+&pm6150l_rgb_led {
+	red {
+		status = "disabled";
+	};
 
-&green_led {
-	status = "disabled";
-};
+	green {
+		status = "disabled";
+	};
 
-&red_led {
-	status = "disabled";
+	blue {
+		label = "white";
+	};
 };
 
 &qusb_phy0 {
 	qcom,qusb-phy-init-seq =
 		/* <value reg_offset> */
-		   <0x23 0x210 /* PWR_CTRL1 */
-		    0x03 0x04  /* PLL_ANALOG_CONTROLS_TWO */
-		    0x7c 0x18c /* PLL_CLOCK_INVERTERS */
-		    0x80 0x2c  /* PLL_CMODE */
-		    0x0a 0x184 /* PLL_LOCK_DELAY */
-		    0x19 0xb4  /* PLL_DIGITAL_TIMERS_TWO */
-		    0x40 0x194 /* PLL_BIAS_CONTROL_1 */
-		    0x14 0x198  /* PLL_BIAS_CONTROL_2 */
-		    0x21 0x214 /* PWR_CTRL2 */
-		    0x00 0x220 /* IMP_CTRL1 */
-		    0x18 0x224 /* IMP_CTRL2 */
-		    0x07 0x240  /* TUNE1 */
-		    0x08 0x244  /* TUNE2 */
-		    0xca 0x248 /* TUNE3 */
-		    0x02 0x24c /* TUNE4 */
-		    0x03 0x250 /* TUNE5 */
-		    0x00 0x23c /* CHG_CTRL2 */
-		    0x22 0x210>; /* PWR_CTRL1 */
-		    mi,no-efuse-tune;
+		<0x23 0x210 /* PWR_CTRL1 */
+		 0x03 0x04  /* PLL_ANALOG_CONTROLS_TWO */
+		 0x7c 0x18c /* PLL_CLOCK_INVERTERS */
+		 0x80 0x2c  /* PLL_CMODE */
+		 0x0a 0x184 /* PLL_LOCK_DELAY */
+		 0x19 0xb4  /* PLL_DIGITAL_TIMERS_TWO */
+		 0x40 0x194 /* PLL_BIAS_CONTROL_1 */
+		 0x14 0x198  /* PLL_BIAS_CONTROL_2 */
+		 0x21 0x214 /* PWR_CTRL2 */
+		 0x00 0x220 /* IMP_CTRL1 */
+		 0x18 0x224 /* IMP_CTRL2 */
+		 0x07 0x240  /* TUNE1 */
+		 0x08 0x244  /* TUNE2 */
+		 0xca 0x248 /* TUNE3 */
+		 0x02 0x24c /* TUNE4 */
+		 0x03 0x250 /* TUNE5 */
+		 0x00 0x23c /* CHG_CTRL2 */
+		 0x22 0x210>; /* PWR_CTRL1 */
+
+	mi,no-efuse-tune;
 
 	qcom,qusb-phy-host-init-seq =
 		/* <value reg_offset> */
-		   <0x23 0x210 /* PWR_CTRL1 */
-		    0x03 0x04  /* PLL_ANALOG_CONTROLS_TWO */
-		    0x7c 0x18c /* PLL_CLOCK_INVERTERS */
-		    0x80 0x2c  /* PLL_CMODE */
-		    0x0a 0x184 /* PLL_LOCK_DELAY */
-		    0x19 0xb4  /* PLL_DIGITAL_TIMERS_TWO */
-		    0x40 0x194 /* PLL_BIAS_CONTROL_1 */
-		    0x20 0x198 /* PLL_BIAS_CONTROL_2 */
-		    0x21 0x214 /* PWR_CTRL2 */
-		    0x00 0x220 /* IMP_CTRL1 */
-		    0x18 0x224 /* IMP_CTRL2 */
-		    0x37 0x240 /* TUNE1 */
-		    0x2A 0x244 /* TUNE2 */
-		    0xca 0x248 /* TUNE3 */
-		    0x04 0x24c /* TUNE4 */
-		    0x03 0x250 /* TUNE5 */
-		    0x00 0x23c /* CHG_CTRL2 */
-		    0x22 0x210>; /* PWR_CTRL1 */
+		<0x23 0x210 /* PWR_CTRL1 */
+		 0x03 0x04  /* PLL_ANALOG_CONTROLS_TWO */
+		 0x7c 0x18c /* PLL_CLOCK_INVERTERS */
+		 0x80 0x2c  /* PLL_CMODE */
+		 0x0a 0x184 /* PLL_LOCK_DELAY */
+		 0x19 0xb4  /* PLL_DIGITAL_TIMERS_TWO */
+		 0x40 0x194 /* PLL_BIAS_CONTROL_1 */
+		 0x20 0x198 /* PLL_BIAS_CONTROL_2 */
+		 0x21 0x214 /* PWR_CTRL2 */
+		 0x00 0x220 /* IMP_CTRL1 */
+		 0x18 0x224 /* IMP_CTRL2 */
+		 0x37 0x240 /* TUNE1 */
+		 0x2A 0x244 /* TUNE2 */
+		 0xca 0x248 /* TUNE3 */
+		 0x04 0x24c /* TUNE4 */
+		 0x03 0x250 /* TUNE5 */
+		 0x00 0x23c /* CHG_CTRL2 */
+		 0x22 0x210>; /* PWR_CTRL1 */
 };
 
 /* Enlarge TZ memory size to 62M */
 &removed_region {
-       reg = <0 0x86200000 0 0x4900000>;
+	reg = <0 0x86200000 0 0x4900000>;
 };
