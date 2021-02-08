@@ -164,28 +164,29 @@ And public attribution of xiaomi platforms(like F3 and so and)
 &qusb_phy0 {
 	qcom,qusb-phy-init-seq =
 		/* <value reg_offset> */
-		   <0x23 0x210 /* PWR_CTRL1 */
-		    0x03 0x04  /* PLL_ANALOG_CONTROLS_TWO */
-		    0x7c 0x18c /* PLL_CLOCK_INVERTERS */
-		    0x80 0x2c  /* PLL_CMODE */
-		    0x0a 0x184 /* PLL_LOCK_DELAY */
-		    0x19 0xb4  /* PLL_DIGITAL_TIMERS_TWO */
-		    0x40 0x194 /* PLL_BIAS_CONTROL_1 */
-		    0x20 0x198 /* PLL_BIAS_CONTROL_2 */
-		    0x21 0x214 /* PWR_CTRL2 */
-		    0x08 0x220 /* IMP_CTRL1 */
-		    0x58 0x224 /* IMP_CTRL2 */
-		    0x07 0x240 /* TUNE1 */
-		    0x29 0x244 /* TUNE2 */
-		    0xca 0x248 /* TUNE3 */
-		    0x07 0x24c /* TUNE4 */
-		    0x03 0x250 /* TUNE5 */
-		    0x30 0x23c /* CHG_CTRL2 */
-		    0x22 0x210>; /* PWR_CTRL1 */
-		    mi,efuse-pll-bias;
-		    mi,efuse-pll-bias-seq = <1 0x20>;
-		    mi,efuse-pll-bias-host;
-		    mi,efuse-pll-bias-seq-host = <1 0x20>;
+		<0x23 0x210 /* PWR_CTRL1 */
+		 0x03 0x04  /* PLL_ANALOG_CONTROLS_TWO */
+		 0x7c 0x18c /* PLL_CLOCK_INVERTERS */
+		 0x80 0x2c  /* PLL_CMODE */
+		 0x0a 0x184 /* PLL_LOCK_DELAY */
+		 0x19 0xb4  /* PLL_DIGITAL_TIMERS_TWO */
+		 0x40 0x194 /* PLL_BIAS_CONTROL_1 */
+		 0x20 0x198 /* PLL_BIAS_CONTROL_2 */
+		 0x21 0x214 /* PWR_CTRL2 */
+		 0x08 0x220 /* IMP_CTRL1 */
+		 0x58 0x224 /* IMP_CTRL2 */
+		 0x07 0x240 /* TUNE1 */
+		 0x29 0x244 /* TUNE2 */
+		 0xca 0x248 /* TUNE3 */
+		 0x07 0x24c /* TUNE4 */
+		 0x03 0x250 /* TUNE5 */
+		 0x30 0x23c /* CHG_CTRL2 */
+		 0x22 0x210>; /* PWR_CTRL1 */
+
+	mi,efuse-pll-bias;
+	mi,efuse-pll-bias-seq = <1 0x20>;
+	mi,efuse-pll-bias-host;
+	mi,efuse-pll-bias-seq-host = <1 0x20>;
 };
 
 &qupv3_se9_i2c {
@@ -263,19 +264,19 @@ And public attribution of xiaomi platforms(like F3 and so and)
 
 &pm6150_charger {
 	io-channels = <&pm6150_vadc ADC_USB_IN_V_16>,
-		      <&pm6150_vadc ADC_USB_IN_I>,
-		      <&pm6150_vadc ADC_CHG_TEMP>,
-		      <&pm6150_vadc ADC_DIE_TEMP>,
-		      <&pm6150l_vadc ADC_AMUX_THM1_PU2>,
-		      <&pm6150_vadc ADC_SBUx>,
-		      <&pm6150_vadc ADC_VPH_PWR>;
+			<&pm6150_vadc ADC_USB_IN_I>,
+			<&pm6150_vadc ADC_CHG_TEMP>,
+			<&pm6150_vadc ADC_DIE_TEMP>,
+			<&pm6150l_vadc ADC_AMUX_THM1_PU2>,
+			<&pm6150_vadc ADC_SBUx>,
+			<&pm6150_vadc ADC_VPH_PWR>;
 	io-channel-names = "usb_in_voltage",
-			   "usb_in_current",
-			   "chg_temp",
-			   "die_temp",
-			   "conn_temp",
-			   "sbux_res",
-			   "vph_voltage";
+			"usb_in_current",
+			"chg_temp",
+			"die_temp",
+			"conn_temp",
+			"sbux_res",
+			"vph_voltage";
 	qcom,battery-data = <&mtp_batterydata>;
 	qcom,usb-icl-ua = <3000000>;
 	qcom,fcc-max-ua = <5900000>;
@@ -286,7 +287,8 @@ And public attribution of xiaomi platforms(like F3 and so and)
 	qcom,chg-term-current-ma = <(-200)>;
 	qcom,sec-charger-config = <0>;
 
-	qcom,thermal-mitigation = <5900000 5000000 4500000 4000000 3500000 3000000 2900000
+	qcom,thermal-mitigation
+				= <5900000 5000000 4500000 4000000 3500000 3000000 2900000
 				   2800000 2600000 2400000 2200000 2000000 1800000 1500000
 				   1000000 500000>;
 	qcom,thermal-mitigation-icl
@@ -359,8 +361,8 @@ And public attribution of xiaomi platforms(like F3 and so and)
 			function = "normal";
 			output-low;
 			power-source = <0>;
-               };
-       };
+		};
+	};
 };
 
 &usb0 {
@@ -780,7 +782,6 @@ And public attribution of xiaomi platforms(like F3 and so and)
 };
 
 &thermal_zones {
-
 	xo_therm {
 		polling-delay-passive = <0>;
 		polling-delay = <0>;
@@ -885,7 +886,7 @@ And public attribution of xiaomi platforms(like F3 and so and)
 };
 
 &pm6150l_rgb_led {
-       status = "disabled";
+	status = "disabled";
 };
 
 &soc {
@@ -903,7 +904,7 @@ And public attribution of xiaomi platforms(like F3 and so and)
 	thermal_message: thermal-message {
 		board-sensor = "VIRTUAL-SENSOR";
 	};
-	};
+};
 
 &qupv3_se4_i2c {
 

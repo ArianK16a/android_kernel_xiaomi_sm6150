@@ -35,19 +35,19 @@ And public attribution of xiaomi platforms(like F3 and so and)
 
 &pm6150_charger {
 	io-channels = <&pm6150_vadc ADC_USB_IN_V_16>,
-		      <&pm6150_vadc ADC_USB_IN_I>,
-		      <&pm6150_vadc ADC_CHG_TEMP>,
-		      <&pm6150_vadc ADC_DIE_TEMP>,
-		      <&pm6150l_vadc ADC_AMUX_THM1_PU2>,
-		      <&pm6150_vadc ADC_SBUx>,
-		      <&pm6150_vadc ADC_VPH_PWR>;
+			<&pm6150_vadc ADC_USB_IN_I>,
+			<&pm6150_vadc ADC_CHG_TEMP>,
+			<&pm6150_vadc ADC_DIE_TEMP>,
+			<&pm6150l_vadc ADC_AMUX_THM1_PU2>,
+			<&pm6150_vadc ADC_SBUx>,
+			<&pm6150_vadc ADC_VPH_PWR>;
 	io-channel-names = "usb_in_voltage",
-			   "usb_in_current",
-			   "chg_temp",
-			   "die_temp",
-			   "conn_temp",
-			   "sbux_res",
-			   "vph_voltage";
+			"usb_in_current",
+			"chg_temp",
+			"die_temp",
+			"conn_temp",
+			"sbux_res",
+			"vph_voltage";
 	qcom,battery-data = <&mtp_batterydata>;
 	qcom,usb-icl-ua = <2800000>;
 	qcom,fcc-max-ua = <3500000>;
@@ -57,11 +57,12 @@ And public attribution of xiaomi platforms(like F3 and so and)
 	qcom,chg-term-current-ma = <(-200)>;
 	qcom,sec-charger-config = <1>;
 	qcom,dynamic-fv-enable;
-	qcom,thermal-mitigation = <3500000 3400000 3300000 3200000 3100000 3000000 2900000
+	qcom,thermal-mitigation
+				= <3500000 3400000 3300000 3200000 3100000 3000000 2900000
 				   2800000 2600000 2400000 2200000 2000000 1800000 1500000
 				   1000000 500000>;
 	qcom,thermal-mitigation-icl
-				 = <2800000 2700000 2600000 2400000 2200000 2100000 2000000
+				= <2800000 2700000 2600000 2400000 2200000 2100000 2000000
 				   2000000 2000000 1900000 1800000 1600000 1500000 1300000
 				   1000000 750000>;
 	qcom,thermal-mitigation-dcp
@@ -296,7 +297,6 @@ And public attribution of xiaomi platforms(like F3 and so and)
 };
 
 &thermal_zones {
-
 	xo_therm {
 		polling-delay-passive = <0>;
 		polling-delay = <0>;
