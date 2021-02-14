@@ -1,5 +1,5 @@
 /* Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
- * Copyright (C) 2019 XiaoMi, Inc.
+ * Copyright (C) 2021 XiaoMi, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -412,6 +412,7 @@ static const struct attribute *breath_attrs[] = {
 	NULL
 };
 
+
 extern int qpnp_lpg_ramp_step_ms_get(struct pwm_device *pwm);
 extern int qpnp_lpg_ramp_step_ms_set(struct pwm_device *pwm, u16 step_ms);
 
@@ -613,7 +614,6 @@ static int qpnp_tri_led_register(struct qpnp_tri_led_chip *chip)
 				goto err_out;
 			}
 		}
-
 		rc = sysfs_create_files(&led->cdev.dev->kobj, step_ms_attrs);
 		sysfs_index = STEP_MS;
 		if (rc < 0) {
@@ -664,40 +664,39 @@ err_out:
 				lo_idx_attrs);
 		} else {
 			switch (sysfs_index) {
-				case LO_IDX:
-					sysfs_remove_files(&chip->leds[j].cdev.dev->kobj,
-						breath_attrs);
-					sysfs_remove_files(&chip->leds[j].cdev.dev->kobj,
-						step_ms_attrs);
-					sysfs_remove_files(&chip->leds[j].cdev.dev->kobj,
-						pause_lo_count_attrs);
-					sysfs_remove_files(&chip->leds[j].cdev.dev->kobj,
-						lut_pattern_attrs);
-					break;
-				case LUT_PATTERN:
-					sysfs_remove_files(&chip->leds[j].cdev.dev->kobj,
-						breath_attrs);
-					sysfs_remove_files(&chip->leds[j].cdev.dev->kobj,
-						step_ms_attrs);
-					sysfs_remove_files(&chip->leds[j].cdev.dev->kobj,
-						pause_lo_count_attrs);
-					break;
-				case PAUSE_LO:
-					sysfs_remove_files(&chip->leds[j].cdev.dev->kobj,
-						breath_attrs);
-					sysfs_remove_files(&chip->leds[j].cdev.dev->kobj,
-						step_ms_attrs);
-					break;
-				case STEP_MS:
-					sysfs_remove_files(&chip->leds[j].cdev.dev->kobj,
-						breath_attrs);
-					break;
-				case BREATH:
-				default:
-					break;
+			case LO_IDX:
+				sysfs_remove_files(&chip->leds[j].cdev.dev->kobj,
+					breath_attrs);
+				sysfs_remove_files(&chip->leds[j].cdev.dev->kobj,
+					step_ms_attrs);
+				sysfs_remove_files(&chip->leds[j].cdev.dev->kobj,
+					pause_lo_count_attrs);
+				sysfs_remove_files(&chip->leds[j].cdev.dev->kobj,
+					lut_pattern_attrs);
+				break;
+			case LUT_PATTERN:
+				sysfs_remove_files(&chip->leds[j].cdev.dev->kobj,
+					breath_attrs);
+				sysfs_remove_files(&chip->leds[j].cdev.dev->kobj,
+					step_ms_attrs);
+				sysfs_remove_files(&chip->leds[j].cdev.dev->kobj,
+					pause_lo_count_attrs);
+				break;
+			case PAUSE_LO:
+				sysfs_remove_files(&chip->leds[j].cdev.dev->kobj,
+					breath_attrs);
+				sysfs_remove_files(&chip->leds[j].cdev.dev->kobj,
+					step_ms_attrs);
+				break;
+			case STEP_MS:
+				sysfs_remove_files(&chip->leds[j].cdev.dev->kobj,
+					breath_attrs);
+				break;
+			case BREATH:
+			default:
+				break;
 			}
 		}
-
 
 		mutex_destroy(&chip->leds[j].lock);
 	}

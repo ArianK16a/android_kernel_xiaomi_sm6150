@@ -2,6 +2,7 @@
  * LED Class Core
  *
  * Copyright (C) 2005 John Lenz <lenz@cs.wisc.edu>
+ * Copyright (C) 2021 XiaoMi, Inc.
  * Copyright (C) 2005-2007 Richard Purdie <rpurdie@openedhand.com>
  *
  * This program is free software; you can redistribute it and/or modify

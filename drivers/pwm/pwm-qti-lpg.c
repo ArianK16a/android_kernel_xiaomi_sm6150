@@ -1,4 +1,5 @@
 /* Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
+ * Copyright (C) 2021 XiaoMi, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -106,6 +107,7 @@
 
 #define LPG_LUT_VALUE_MSB_MASK		BIT(0)
 #define LPG_LUT_COUNT_MAX		47
+#define RETURN_ERR				-1
 
 /* LPG config settings in SDAM */
 #define SDAM_REG_PBS_SEQ_EN			0x42
@@ -172,7 +174,7 @@ struct qpnp_lpg_lut {
 	struct mutex		lock;
 	u32			reg_base;
 	u32			*pattern; /* patterns in percentage */
-	bool			pattern_switch;
+	bool		pattern_switch;
 	u32			pattern_length;
 	u32			*pattern_camera;
 	u32			pattern_camera_length;
@@ -794,17 +796,17 @@ u8 qpnp_lpg_switch_lut_pattern(struct pwm_device *pwm, int index)
 
 	if (lut == NULL) {
 		pr_err("lut is NULL\n");
-		return -EPERM;
+		return RETURN_ERR;
 	}
 
 	if (!lut->pattern_switch) {
 		pr_err("lut pattern switch disabled\n");
-		return -EPERM;
+		return RETURN_ERR;
 	}
 
 	if (index < 0) {
 		pr_err("invalid index:%d\n", index);
-		return -EPERM;
+		return RETURN_ERR;
 	}
 
 	if (index == 0) {
@@ -845,12 +847,12 @@ u8 qpnp_lpg_lo_idx_set(struct pwm_device *pwm, int lo_idx)
 
 	if (lut == NULL) {
 		pr_err("lut is NULL\n");
-		return -EPERM;
+		return RETURN_ERR;
 	}
 
 	if (lo_idx < 0 || lo_idx > lut->pattern_length) {
 		pr_err("invalid lo_idx:%d\n", lo_idx);
-		return -EPERM;
+		return RETURN_ERR;
 	}
 
 	channel->ramp_config.lo_idx = lo_idx;
@@ -1708,16 +1710,17 @@ static int qpnp_lpg_parse_dt(struct qpnp_lpg_chip *chip)
 		ramp->pattern = &chip->lut->pattern[ramp->lo_idx];
 		lpg->max_pattern_length = ramp->pattern_length;
 
-		ramp->pattern_repeat = of_property_read_bool(child,
-				"qcom,ramp-pattern-repeat");
-
-		if (chip->use_sdam)
-			continue;
 		if (chip->lut->pattern_switch) {
 			lpg->max_pattern_length =
 				chip->lut->pattern_length > chip->lut->pattern_camera_length ? \
 				chip->lut->pattern_length : chip->lut->pattern_camera_length;
 		}
+
+		ramp->pattern_repeat = of_property_read_bool(child,
+				"qcom,ramp-pattern-repeat");
+
+		if (chip->use_sdam)
+			continue;
 
 		rc = of_property_read_u32(child,
 				"qcom,ramp-pause-hi-count", &tmp);
