@@ -5119,40 +5119,6 @@ static ssize_t sysfs_doze_mode_read(struct device *dev,
 	return snprintf(buf, PAGE_SIZE, "%d\n", doze_mode);
 }
 
-static ssize_t sysfs_doze_mode_write(struct device *dev,
-	struct device_attribute *attr, const char *buf, size_t count)
-{
-	struct dsi_display *display;
-	struct dsi_panel *panel;
-	int rc = 0;
-	int mode;
-
-	display = dev_get_drvdata(dev);
-	if (!display) {
-		pr_err("Invalid display\n");
-		return -EINVAL;
-	}
-
-	rc = kstrtoint(buf, 10, &mode);
-	if (rc) {
-		pr_err("%s: kstrtoint failed. rc=%d\n", __func__, rc);
-		return rc;
-	}
-
-	if (mode < DSI_DOZE_LPM || mode > DSI_DOZE_HBM) {
-		pr_err("%s: invalid value for doze mode\n", __func__);
-		return -EINVAL;
-	}
-
-	panel = display->panel;
-
-	mutex_lock(&panel->panel_lock);
-	dsi_panel_set_doze_mode(panel, (enum dsi_doze_mode_type) mode);
-	mutex_unlock(&panel->panel_lock);
-
-	return count;
-}
-
 static ssize_t sysfs_fod_ui_read(struct device *dev,
 	struct device_attribute *attr, char *buf)
 {
@@ -5174,9 +5140,9 @@ static DEVICE_ATTR(doze_status, 0644,
 			sysfs_doze_status_read,
 			sysfs_doze_status_write);
 
-static DEVICE_ATTR(doze_mode, 0644,
+static DEVICE_ATTR(doze_mode, 0444,
 			sysfs_doze_mode_read,
-			sysfs_doze_mode_write);
+			NULL);
 
 static DEVICE_ATTR(fod_ui, 0444,
 			sysfs_fod_ui_read,
