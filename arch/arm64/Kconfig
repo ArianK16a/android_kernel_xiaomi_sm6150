@@ -1582,6 +1582,12 @@ config MACH_XIAOMI_SDMMAGPIE
 
 menu "Xiaomi board selection"
 
+config MACH_XIAOMI_COURBET
+        bool "courbet board"
+        select MACH_XIAOMI_SDMMAGPIE
+        help
+          Support for Mi 11 Lite, condenamed courbet.
+
 config MACH_XIAOMI_DAVINCI
         bool "davinci board"
         select MACH_XIAOMI_SDMMAGPIE
@@ -1593,6 +1599,12 @@ config MACH_XIAOMI_PHOENIX
         select MACH_XIAOMI_SDMMAGPIE
         help
           Support for Redmi K30, codenamed phoenix.
+
+config MACH_XIAOMI_SWEET
+        bool "sweet board"
+        select MACH_XIAOMI_SDMMAGPIE
+        help
+          Support for Redmi Note 10 Pro, codenamed sweet.
 
 config MACH_XIAOMI_TOCO
         bool "toco board"
