@@ -370,6 +370,9 @@ static int tx_macro_event_handler(struct snd_soc_codec *codec, u16 event,
 		tx_macro_mclk_reset(tx_dev);
 		break;
 	case BOLERO_MACRO_EVT_BCS_CLK_OFF:
+		if (tx_priv->bcs_clk_en)
+			snd_soc_update_bits(codec,
+				BOLERO_CDC_TX0_TX_PATH_SEC7, 0x40, data << 6);
 		if (data)
 			tx_priv->hs_slow_insert_complete = true;
 		else
@@ -1709,7 +1712,7 @@ static int tx_macro_init(struct snd_soc_codec *codec)
 	}
 	tx_priv->codec = codec;
 	snd_soc_update_bits(codec,
-		BOLERO_CDC_TX0_TX_PATH_SEC7, 0x7F, 0x6A);
+		BOLERO_CDC_TX0_TX_PATH_SEC7, 0x3F, 0x0E);
 
 	return 0;
 }

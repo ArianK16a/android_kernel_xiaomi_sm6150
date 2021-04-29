@@ -136,6 +136,8 @@ static int wcd937x_init_reg(struct snd_soc_codec *codec)
 	snd_soc_update_bits(codec, WCD937X_MICB1_TEST_CTL_1, 0xFF, 0xFA);
 	snd_soc_update_bits(codec, WCD937X_MICB2_TEST_CTL_1, 0xFF, 0xFA);
 	snd_soc_update_bits(codec, WCD937X_MICB3_TEST_CTL_1, 0xFF, 0xFA);
+	snd_soc_update_bits(codec, WCD937X_MICB2_TEST_CTL_2, 0xFF, 0x01);
+	snd_soc_update_bits(codec, WCD937X_MICB2_TEST_CTL_3, 0xFF, 0x24);
 	return 0;
 }
 

@@ -8475,6 +8475,8 @@ static struct snd_soc_card *populate_snd_card_dailinks(struct device *dev)
 					dev_info(dev, "%s: hardware is HARDWARE_PLATFORM_TOCO.\n", __func__);
 					msm_mi2s_be_dai_links[0].codec_name = "tfa98xx.2-0034";
 					msm_mi2s_be_dai_links[0].codec_dai_name = "tfa98xx-aif-2-34";
+				} else if (HARDWARE_PLATFORM_SWEET == hw_platform) {
+					dev_info(dev, "%s: hardware is HARDWARE_PLATFORM_SWEET.\n", __func__);
 				} else {
 					dev_info(dev, "%s: hardware is unknown, %d.\n", __func__, hw_platform);
 
