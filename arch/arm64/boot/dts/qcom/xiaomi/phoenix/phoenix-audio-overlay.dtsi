@@ -12,7 +12,7 @@
  * GNU General Public License for more details.
  */
 
-#include "sdmmagpie-audio-overlay.dtsi"
+#include "../../sdmmagpie-audio-overlay.dtsi"
 
 &sm6150_snd {
 	qcom,model = "sm6150-idp-snd-card";
@@ -23,9 +23,8 @@
 		"MIC BIAS2", "Analog Mic2",
 		"AMIC1", "MIC BIAS1",
 		"MIC BIAS1", "Analog Mic1",
-		"AMIC3", "MIC BIAS3",
-		"MIC BIAS3", "Analog Mic3",
 		"AMIC4", "MIC BIAS3",
+		"MIC BIAS3", "Analog Mic3",
 		"TX_AIF1 CAP", "VA_MCLK",
 		"TX_AIF2 CAP", "VA_MCLK",
 		"RX AIF1 PB", "VA_MCLK",
@@ -106,14 +105,14 @@
 	status = "disabled";
 };
 
-&qupv3_se9_i2c {
+&qupv3_se7_i2c {
 	status = "ok";
 	tfa98xx@34 {
 		compatible = "nxp,tfa98xx";
-		reset-gpio = <&tlmm 12 0>;
-		irq-gpio = <&tlmm 56 0>;
+		reset-gpio = <&tlmm 66 0>;
+		irq-gpio = <&tlmm 93 0>;
 		interrupt-parent = <&tlmm>;
-		interrupts = <56 0>;
+		interrupts = <93 0>;
 		interrupt-names = "smartpa_irq";
 		pinctrl-names = "default", "sleep";
 		pinctrl-0 = <&smartpa_int_active &smartpa_enable_active>;

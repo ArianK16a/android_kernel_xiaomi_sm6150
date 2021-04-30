@@ -12,7 +12,7 @@
  * GNU General Public License for more details.
  */
 
-#include "sdmmagpie-audio-overlay.dtsi"
+#include "../../sdmmagpie-audio-overlay.dtsi"
 
 &sm6150_snd {
 	qcom,model = "sm6150-idp-snd-card";
@@ -25,6 +25,7 @@
 		"MIC BIAS1", "Analog Mic1",
 		"AMIC3", "MIC BIAS3",
 		"MIC BIAS3", "Analog Mic3",
+		"AMIC4", "MIC BIAS3",
 		"TX_AIF1 CAP", "VA_MCLK",
 		"TX_AIF2 CAP", "VA_MCLK",
 		"RX AIF1 PB", "VA_MCLK",
@@ -39,6 +40,7 @@
 		"IN3_AUX", "AUX_OUT",
 		"TX SWR_ADC0", "ADC1_OUTPUT",
 		"TX SWR_ADC2", "ADC2_OUTPUT",
+		"TX SWR_ADC3", "ADC3_OUTPUT",
 		"RX_TX DEC0_INP", "TX DEC0 MUX",
 		"RX_TX DEC1_INP", "TX DEC1 MUX",
 		"RX_TX DEC2_INP", "TX DEC2 MUX",
@@ -47,8 +49,8 @@
 		"SpkrRight IN", "WSA_SPK2 OUT",
 		"WSA_SPK1 OUT", "VA_MCLK",
 		"WSA_SPK2 OUT", "VA_MCLK";
-	qcom,msm-mbhc-hphl-swh = <1>;
-	qcom,msm-mbhc-gnd-swh = <1>;
+	qcom,msm-mbhc-hphl-swh = <0>;
+	qcom,msm-mbhc-gnd-swh = <0>;
 	qcom,cdc-dmic01-gpios = <&cdc_dmic01_gpios>;
 	qcom,cdc-dmic23-gpios = <&cdc_dmic23_gpios>;
 	qcom,pri-mi2s-gpios = <&cdc_pri_mi2s_gpios>;
@@ -63,6 +65,8 @@
 	qcom,codec-aux-devs = <&wcd937x_codec>;
 	qcom,msm_audio_ssr_devs = <&audio_apr>, <&q6core>,
 				<&lpi_tlmm>, <&bolero>;
+	qcom,msm-mbhc-usbc-audio-supported = <1>;
+	fsa4480-i2c-handle = <&fsa4480>;
 };
 
 &wsa_swr_gpios {
@@ -104,19 +108,44 @@
 	status = "disabled";
 };
 
-&qupv3_se4_i2c {
+&qupv3_se7_i2c {
 	status = "ok";
 	tfa98xx@34 {
-		compatible = "nxp,tfa98xx";
-		reset-gpio = <&tlmm 67 0>;
-		irq-gpio = <&tlmm 56 0>;
+		compatible = "tfa,tfa98xx";
+		reset-gpio = <&tlmm 66 0>;
+		irq-gpio = <&tlmm 90 0>;
+		spk-sw-gpio = <&tlmm 110 0>;
 		interrupt-parent = <&tlmm>;
-		interrupts = <56 0>;
+		interrupts = <90 0>;
 		interrupt-names = "smartpa_irq";
 		pinctrl-names = "default", "sleep";
-		pinctrl-0 = <&smartpa_int_active &smartpa_enable_active>;
-		pinctrl-1 = <&smartpa_int_suspend &smartpa_enable_suspend>;
+		pinctrl-0 = <&smartpa_top_int_active &smartpa_enable_active &spk_sw_active>;
+		pinctrl-1 = <&smartpa_top_int_suspend &smartpa_enable_suspend &spk_sw_inactive>;
 		reg = <0x34>;
+		status = "ok";
+	};
+	tfa98xx@35 {
+		compatible = "tfa,tfa98xx";
+
+		irq-gpio = <&tlmm 11 0>;
+		interrupt-parent = <&tlmm>;
+		interrupts = <11 0>;
+		interrupt-names = "smartpa_irq";
+		pinctrl-names = "default", "sleep";
+		pinctrl-0 = <&smartpa_bot_int_active>;
+		pinctrl-1 = <&smartpa_bot_int_suspend>;
+		reg = <0x35>;
+		status = "ok";
+	};
+};
+
+&qupv3_se9_i2c {
+	status = "ok";
+	fsa4480: fsa4480@42 {
+		compatible = "qcom,fsa4480-i2c";
+		reg = <0x42>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&fsa_usbc_ana_en>;
 		status = "ok";
 	};
 };
@@ -124,5 +153,6 @@
 &wcd937x_codec {
 	compatible = "qcom,wcd937x-codec";
 	qcom,cdc-micbias1-mv = <2750>;
+	qcom,cdc-micbias2-mv = <2750>;
 	qcom,cdc-micbias3-mv = <2750>;
 };

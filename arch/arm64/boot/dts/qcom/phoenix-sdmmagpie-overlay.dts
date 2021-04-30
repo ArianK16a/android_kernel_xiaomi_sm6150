@@ -17,9 +17,9 @@
 #include <dt-bindings/interrupt-controller/arm-gic.h>
 #include <dt-bindings/clock/qcom,camcc-sdmmagpie.h>
 
-#include "phoenix-audio-overlay.dtsi"
-#include "phoenix-sdmmagpie.dtsi"
-#include "phoenix-nfc-overlay.dtsi"
+#include "xiaomi/phoenix/phoenix-audio-overlay.dtsi"
+#include "xiaomi/phoenix/phoenix-sdmmagpie.dtsi"
+#include "xiaomi/phoenix/phoenix-nfc-overlay.dtsi"
 
 / {
 	model = "PHOENIX";

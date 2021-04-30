@@ -12,7 +12,7 @@
  * GNU General Public License for more details.
  */
 
-#include "sdmmagpie-audio-overlay.dtsi"
+#include "../../sdmmagpie-audio-overlay.dtsi"
 
 &sm6150_snd {
 	qcom,model = "sm6150-idp-snd-card";
@@ -106,42 +106,19 @@
 	status = "disabled";
 };
 
-&qupv3_se4_i2c {
+&qupv3_se9_i2c {
 	status = "ok";
-
-	/* TOP Smart PA */
-	aw882xx_smartpa@34 {
-		compatible = "awinic,aw882xx_smartpa";
-		reg = <0x34>;
-		reset-gpio = <&tlmm 64 0>;
-		irq-gpio = <&tlmm 93 0>;
-		interrupt-parent = <&tlmm>;
-		interrupts = <93 0>;
-		interrupt-names = "smartpa_irq";
-		pinctrl-names = "default", "sleep";
-		pinctrl-0 = <&top_smartpa_int_active>;
-		pinctrl-1 = <&top_smartpa_int_suspend>;
-		monitor-flag = <1>;
-		aw-cali-mode = "aw_class";
-		sound-channel = <0>;
-		status = "ok";
-	};
-
-	/* BOT Smart PA */
-	aw882xx_smartpa@35 {
-		compatible = "awinic,aw882xx_smartpa";
-		reg = <0x35>;
-		reset-gpio = <&tlmm 72 0>;
+	tfa98xx@34 {
+		compatible = "nxp,tfa98xx";
+		reset-gpio = <&tlmm 12 0>;
 		irq-gpio = <&tlmm 56 0>;
 		interrupt-parent = <&tlmm>;
 		interrupts = <56 0>;
 		interrupt-names = "smartpa_irq";
 		pinctrl-names = "default", "sleep";
-		pinctrl-0 = <&bot_smartpa_int_active>;
-		pinctrl-1 = <&bot_smartpa_int_suspend>;
-		monitor-flag = <1>;
-		aw-cali-mode = "aw_class";
-		sound-channel = <1>;
+		pinctrl-0 = <&smartpa_int_active &smartpa_enable_active>;
+		pinctrl-1 = <&smartpa_int_suspend &smartpa_enable_suspend>;
+		reg = <0x34>;
 		status = "ok";
 	};
 };

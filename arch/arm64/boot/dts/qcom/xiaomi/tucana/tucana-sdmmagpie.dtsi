@@ -3,9 +3,9 @@ this file is for attribution only of aquila
 And public attribution of xiaomi platforms(like F3 and so and)
 */
 
-#include "toco-sdmmagpie-pinctrl.dtsi"
-#include "xiaomi-sdmmagpie-common.dtsi"
-#include "toco-sdmmagpie-camera-sensor.dtsi"
+#include "tucana-sdmmagpie-pinctrl.dtsi"
+#include "../xiaomi-sdmmagpie-common.dtsi"
+#include "tucana-sdmmagpie-camera-sensor.dtsi"
 
 &soc {
 	touch_vddio_vreg: touch_vddio_vreg {
@@ -23,10 +23,34 @@ And public attribution of xiaomi platforms(like F3 and so and)
 		fp-gpio-pwr = <&tlmm 63 0>;
 		status = "ok";
 	};
+	fingerprint_fpc {
+		status = "ok";
+		compatible = "fpc,fpc1020";
+		interrupt-parent = <&tlmm>;
+		interrupts = <69 0x0>;
+		fpc,gpio_rst    = <&tlmm 65 0x0>;
+		fpc,gpio_irq    = <&tlmm 69 0x0>;
+		fpc,gpio_vdd1v2  = <&pm6150_gpios 2 0x0>;
+		fpc,gpio_vdd1v8  = <&pm6150_gpios 1 0x0>;
+		fpc,gpio_vdd2v8  = <&tlmm 63 0x0>;
+		/* fpc,enable-on-boot; */
+		/* fpc,enable-wakeup; */
 
+		pinctrl-names = "fpc1020_reset_reset",
+			"fpc1020_reset_active",
+			"fpc1020_irq_active",
+			"fpc1020_vdd1v2_default",
+			"fpc1020_vdd1v8_default";
+
+		pinctrl-0 = <&msm_gpio_65>;
+		pinctrl-1 = <&msm_gpio_65_output_high>;
+		pinctrl-2 = <&msm_gpio_69>;
+		pinctrl-3 = <&pm6150_gpios_2>;
+		pinctrl-4 = <&pm6150_gpios_1>;
+	};
 	mtp_batterydata: qcom,battery-data {
 		qcom,batt-id-range-pct = <15>;
-		#include "batterydata-F4L-sunwoda-5270mah.dtsi"
+		#include "batterydata-F4-sunwoda-5270mah.dtsi"
 	};
 
 	onewire_gpio: onewire_gpio{
@@ -72,6 +96,68 @@ And public attribution of xiaomi platforms(like F3 and so and)
 	simtray {
 		compatible = "xiaomi,simtray-status";
 		status-gpio = <&tlmm 82 0x00>;
+	};
+};
+
+&pm6150_gpios {
+	pm6150_gpio_1_default {
+		pm6150_gpios_1: pm6150_gpios_1 {
+			pins = "gpio1";
+			function = "normal";
+			power-source = <0>;
+			output-low;
+			input-disable;
+		};
+	};
+	pm6150_gpio_2_default {
+		pm6150_gpios_2: pm6150_gpios_2 {
+			pins = "gpio2";
+			function = "normal";
+			power-source = <0>;
+			output-low;
+			input-disable;
+		};
+	};
+};
+
+&tlmm {
+	/* GPIO_65: FP_RESET_N */
+	msm_gpio_65: msm_gpio_65 {
+		mux {
+			 pins = "gpio65";
+			 function = "gpio";
+		};
+		config {
+			pins = "gpio65";
+			drive-strength = <2>;
+			bias-disable;
+			output-low;
+		};
+	};
+	/* GPIO_65 : FP_RESET_N, state device active*/
+	msm_gpio_65_output_high: msm_gpio_65_output_high {
+		mux {
+			pins = "gpio65";
+			function = "gpio";
+		};
+		config {
+			pins = "gpio65";
+			drive-strength = <2>;
+			bias-disable;
+			output-high;
+		};
+	};
+	/* GPI12_69 : FP_INT_N */
+	msm_gpio_69: msm_gpio_69 {
+		mux {
+			pins = "gpio69";
+			function = "gpio";
+		};
+		config {
+			pins = "gpio69";
+			drive-strength = <2>;
+			bias-pull-down;
+		};
 	};
 };
 
@@ -273,8 +359,8 @@ And public attribution of xiaomi platforms(like F3 and so and)
 			function = "normal";
 			output-low;
 			power-source = <0>;
-		};
-	};
+               };
+       };
 };
 
 &usb0 {
@@ -340,7 +426,7 @@ And public attribution of xiaomi platforms(like F3 and so and)
 		fts,irq-flags = <0x2008>; /* IRQF_ONESHOT | IRQF_TRIGGER_LOW */
 		fts,x-max = <1080>;
 		fts,y-max = <2340>;
-		fts,default-fw-name = "st_fts_f4l.ftb";
+		fts,default-fw-name = "st_fts_f4.ftb";
 		fts,config-array-size = <1>;
 		fts,dump-click-count;
 		fts,touch-up-threshold-min = <40>;
@@ -386,7 +472,7 @@ And public attribution of xiaomi platforms(like F3 and so and)
 		fts,touch-idletime-def = <12450>;
 		fts,cfg_0 {
 			fts,tp-vendor = <0x51>;
-			fts,fw-name = "st_fts_f4l.ftb";
+			fts,fw-name = "st_fts_f4.ftb";
 			fts,limit-name = "stm_fts_production_limits.csv";
 			fts,clicknum-file-name = "fts+sdc";
 		};
@@ -477,9 +563,6 @@ And public attribution of xiaomi platforms(like F3 and so and)
 		status = "ok";
 		touch,name = "xiaomi-touch";
 	};
-	thermal_message: thermal-message {
-		board-sensor = "VIRTUAL-SENSOR";
-	};
 };
 
 /* Enlarge TZ memory size to 62M */
@@ -495,6 +578,14 @@ And public attribution of xiaomi platforms(like F3 and so and)
 	reg = <0x86d00000 0x3E00000>;
 };
 
+&sde_dp {
+	status = "disabled";
+	qcom,dp-usbpd-detection = <&pm6150_pdphy>;
+};
+
+&mdss_mdp {
+	connectors = <&sde_rscc &sde_wb &sde_dsi &sde_dsi1>;
+};
 
 &dsi_panel_pwr_supply_labibb_amoled {
 
@@ -541,6 +632,17 @@ And public attribution of xiaomi platforms(like F3 and so and)
 	qcom,platform-reset-gpio = <&pm6150l_gpios 9 0>;
 };
 
+&dsi_xiaomi_f4_42_06_0c_fhd_cmd {
+	qcom,panel-supply-entries = <&dsi_panel_pwr_supply_labibb_amoled>;
+	qcom,mdss-dsi-bl-pmic-control-type = "bl_ctrl_dcs";
+	qcom,mdss-dsi-bl-min-level = <2>;
+	qcom,mdss-dsi-bl-max-level = <2047>;
+	qcom,mdss-dsi-mode-sel-gpio-state = "single_port";
+	//qcom,panel-mode-gpio = <&tlmm 7 0>;
+	qcom,platform-te-gpio = <&tlmm 10 0>;
+	qcom,platform-reset-gpio = <&pm6150l_gpios 9 0>;
+};
+
 &dsi_sw43404_amoled_video {
 	qcom,mdss-brightness-max-level = <2047>;
 };
@@ -549,18 +651,6 @@ And public attribution of xiaomi platforms(like F3 and so and)
 	qcom,dsi-display-active;
 };
 
-&qupv3_se8_2uart {
-	status = "ok";
-};
-
-&sde_dp {
-        pinctrl-names = "mdss_dp_active", "mdss_dp_sleep";
-        pinctrl-0 = <&sde_dp_aux_active &sde_dp_usbplug_cc_active>;
-        pinctrl-1 = <&sde_dp_aux_suspend &sde_dp_usbplug_cc_suspend>;
-        qcom,aux-en-gpio = <&tlmm 42 0>;
-        qcom,aux-sel-gpio = <&tlmm 33 0>;
-        qcom,dp-gpio-aux-switch;
-};
 &pm6150_vadc {
 	pa_therm1 {
 		reg = <ADC_AMUX_THM2_PU2>;
@@ -791,5 +881,136 @@ And public attribution of xiaomi platforms(like F3 and so and)
 
 	quiet-therm-step {
 		disable-thermal-zone;
+	};
+};
+
+&pm6150l_rgb_led {
+       status = "disabled";
+};
+
+&soc {
+	cam_flash_regulator: gpio-regulator@3 {
+		compatible = "regulator-fixed";
+		reg = <0x03 0x00>;
+		regulator-name = "cam_flash_regulator";
+		regulator-min-microvolt = <1800000>;
+		regulator-max-microvolt = <1800000>;
+		regulator-enable-ramp-delay = <135>;
+		enable-active-high;
+		gpio = <&pm6150l_gpios 12 0>;
+		};
+
+	thermal_message: thermal-message {
+		board-sensor = "VIRTUAL-SENSOR";
+	};
+	};
+
+&qupv3_se4_i2c {
+
+	status = "ok";
+	aw3644@63 {
+		compatible = "leds-aw3644";
+		reg = <0x63>;
+		aw3644,hwen-gpio = <&pm6150l_gpios 12 0x00>;
+	};
+
+	/*address 0x64 is dummy address*/
+	led_flash_aw3644: i2c_flash@64 {
+		compatible = "i2c_flash";
+		reg = <0x64>;
+		cell-index = <0x5>;
+		cam_vana-supply = <&cam_flash_regulator>;
+		regulator-names = "cam_vana";
+		rgltr-cntrl-support;
+		rgltr-min-voltage = <1800000>;
+		rgltr-max-voltage = <1800000>;
+		rgltr-load-current = <180000>;
+
+		pinctrl-names = "cam_default", "cam_suspend";
+		pinctrl-0 = <&aw3644_led_active &aw3644_led_hwen_active &aw3644_pwm_default>;
+		pinctrl-1 = <&aw3644_led_suspend &aw3644_led_hwen_suspend &aw3644_pwm_default>;
+		};
+		/*address 0x65 is dummy address*/
+	led_flash_aw3644_1: i2c_flash@65 {
+		compatible = "i2c_flash";
+		reg = <0x65>;
+		cell-index = <0x6>;
+		cam_vana-supply = <&cam_flash_regulator>;
+		regulator-names = "cam_vana";
+		rgltr-cntrl-support;
+		rgltr-min-voltage = <1800000>;
+		rgltr-max-voltage = <1800000>;
+		rgltr-load-current = <180000>;
+
+		pinctrl-names = "cam_default", "cam_suspend";
+		pinctrl-0 = <&aw3644_led_active &aw3644_led_hwen_active &aw3644_pwm_default>;
+		pinctrl-1 = <&aw3644_led_suspend &aw3644_led_hwen_suspend &aw3644_pwm_default>;
+		};
+
+	/*address 0x66 is dummy address*/
+	led_flash_aw3644_2: i2c_flash@66 {
+		compatible = "i2c_flash";
+		reg = <0x66>;
+		cell-index = <0x7>;
+		cam_vana-supply = <&cam_flash_regulator>;
+		regulator-names = "cam_vana";
+		rgltr-cntrl-support;
+		rgltr-min-voltage = <1800000>;
+		rgltr-max-voltage = <1800000>;
+		rgltr-load-current = <180000>;
+
+		pinctrl-names = "cam_default", "cam_suspend";
+		pinctrl-0 = <&aw3644_led_active &aw3644_led_hwen_active &aw3644_pwm_default>;
+		pinctrl-1 = <&aw3644_led_suspend &aw3644_led_hwen_suspend &aw3644_pwm_default>;
+		};
+
+	/*address 0x67 is dummy address*/
+	led_flash_aw3644_3: i2c_flash@67 {
+		compatible = "i2c_flash";
+		reg = <0x67>;
+		cell-index = <0x8>;
+		cam_vana-supply = <&cam_flash_regulator>;
+		regulator-names = "cam_vana";
+		rgltr-cntrl-support;
+		rgltr-min-voltage = <1800000>;
+		rgltr-max-voltage = <1800000>;
+		rgltr-load-current = <180000>;
+
+		pinctrl-names = "cam_default", "cam_suspend";
+		pinctrl-0 = <&aw3644_led_active &aw3644_led_hwen_active &aw3644_pwm_default>;
+		pinctrl-1 = <&aw3644_led_suspend &aw3644_led_hwen_suspend &aw3644_pwm_default>;
+		};
+
+	};
+&cam_cci0 {
+	i2c_freq_1Mhz_cci0: qcom,i2c_fast_plus_mode {
+		hw-scl-stretch-en = <1>;
+	};
+};
+
+&cam_cci1 {
+	i2c_freq_1Mhz_cci1: qcom,i2c_fast_plus_mode {
+		hw-scl-stretch-en = <1>;
+	};
+};
+
+&msm_cam_smmu {
+	msm_cam_smmu_icp {
+		icp_iova_mem_map: iova-mem-map {
+			iova-mem-region-shared {
+				/* Shared region is 268MB long */
+				iova-region-len = <0x10000000>;
+			};
+			iova-mem-region-secondary-heap {
+				iova-region-start = <0x17400000>;
+			};
+			iova-mem-region-io {
+				iova-region-start = <0x17600000>;
+				iova-region-len = <0xCF300000>;
+			};
+			iova-mem-qdss-region {
+				iova-region-start = <0x17500000>;
+			};
+		};
 	};
 };

@@ -12,7 +12,7 @@
  * GNU General Public License for more details.
  */
 
-#include "sdmmagpie-audio-overlay.dtsi"
+#include "../../sdmmagpie-audio-overlay.dtsi"
 
 &sm6150_snd {
 	qcom,model = "sm6150-idp-snd-card";
