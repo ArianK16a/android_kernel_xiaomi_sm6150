@@ -1,3 +1,0 @@
-&tx_macro {
-	qcom,swr-mstr-tx-wakeup-capable;
-};

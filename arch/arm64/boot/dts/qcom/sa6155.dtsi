@@ -12,6 +12,7 @@
 
 #include "sm6150.dtsi"
 #include "sa6155-pmic.dtsi"
+#include "sa6155-display.dtsi"
 
 / {
 	model = "Qualcomm Technologies, Inc. SA6155";
@@ -567,8 +568,4 @@
 			};
 		};
 	};
-};
-
-&kgsl_msm_iommu {
-	qcom,secure-size = <0x20000000>; /* 512MB */
 };
