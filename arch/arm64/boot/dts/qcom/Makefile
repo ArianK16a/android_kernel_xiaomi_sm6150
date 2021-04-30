@@ -23,21 +23,6 @@ toco-sdmmagpie-overlay.dtbo-base := sdmmagpie.dtb
 
 dtbo-$(CONFIG_MACH_XIAOMI_TUCANA) += tucana-sdmmagpie-overlay.dtbo
 tucana-sdmmagpie-overlay.dtbo-base := sdmmagpie.dtb
-else
-dtb-$(CONFIG_MACH_XIAOMI_COURBET) += courbet-sdmmagpie.dtb
-
-dtb-$(CONFIG_MACH_XIAOMI_DAVINCI) += \
-	davinci-sdmmagpie.dtb \
-	davinci_m0a-sdmmagpie.dtb \
-	davinci_m0b-sdmmagpie.dtb
-
-dtb-$(CONFIG_MACH_XIAOMI_PHOENIX) += phoenix-sdmmagpie.dtb
-
-dtb-$(CONFIG_MACH_XIAOMI_SWEET) += sweet-sdmmagpie.dtb
-
-dtb-$(CONFIG_MACH_XIAOMI_TOCO) += toco-sdmmagpie.dtb
-
-dtb-$(CONFIG_MACH_XIAOMI_TUCANA) += tucana-sdmmagpie.dtb
 endif
 else
 
