@@ -38,7 +38,6 @@
 	aliases {
 		spi0 = &qupv3_se0_spi;
 		spi1 = &qupv3_se4_spi;
-		spi2 = &qupv3_se8_spi;
 		i2c0 = &qupv3_se2_i2c;
 		i2c1 = &qupv3_se7_i2c;
 		i2c2 = &qupv3_se9_i2c;
@@ -460,7 +459,7 @@
 	};
 
 	chosen {
-		bootargs = "rcu_nocbs=0-7 noirqdebug";
+		bootargs = "rcupdate.rcu_expedited=1 rcu_nocbs=0-7";
 	};
 
 	soc: soc { };
@@ -486,7 +485,7 @@
 		};
 	};
 
-	reserved_memory: reserved-memory {
+	reserved-memory {
 		#address-cells = <2>;
 		#size-cells = <2>;
 		ranges;
@@ -636,6 +635,11 @@
 		cont_splash_memory: cont_splash_region@9c000000 {
 			reg = <0x0 0x9c000000 0x0 0x01700000>;
 			label = "cont_splash_region";
+		};
+
+		disp_rdump_memory: disp_rdump_region@9c000000 {
+			reg = <0x0 0x9c000000 0x0 0x01800000>;
+			label = "disp_rdump_region";
 		};
 
 		dfps_data_memory: dfps_data_region@9d700000 {
@@ -1821,7 +1825,7 @@
 
 				msm_cdsp_rm: qcom,msm_cdsp_rm {
 					compatible = "qcom,msm-cdsp-rm";
-					qcom,qos-latency-us = <67>;
+					qcom,qos-latency-us = <44>;
 					qcom,qos-maxhold-ms = <20>;
 					qcom,compute-cx-limit-en;
 					qcom,compute-priority-mode = <2>;
