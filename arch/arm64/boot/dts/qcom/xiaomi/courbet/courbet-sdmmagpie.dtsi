@@ -4,7 +4,7 @@ And public attribution of xiaomi platforms(like F3 and so and)
 */
 
 #include "courbet-sdmmagpie-pinctrl.dtsi"
-#include "xiaomi-sdmmagpie-common.dtsi"
+#include "../xiaomi-sdmmagpie-common.dtsi"
 #include "courbet-sdmmagpie-camera-sensor.dtsi"
 &soc {
 	touch_vddio_vreg: touch_vddio_vreg {
@@ -687,7 +687,7 @@ And public attribution of xiaomi platforms(like F3 and so and)
 				goodix,fw-name = "goodix_gt9886_fw_f4.bin";
 		};
 	};
-        #include "pm8008.dtsi"
+        #include "../../pm8008.dtsi"
 };
 
 &pm8008_8 {

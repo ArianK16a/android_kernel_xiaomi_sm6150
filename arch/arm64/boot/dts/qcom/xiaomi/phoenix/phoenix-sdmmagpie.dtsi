@@ -11,7 +11,7 @@
  * GNU General Public License for more details.
  */
 #include "phoenix-sdmmagpie-pinctrl.dtsi"
-#include "xiaomi-sdmmagpie-common.dtsi"
+#include "../xiaomi-sdmmagpie-common.dtsi"
 #include "phoenix-sdmmagpie-camera-sensor.dtsi"
 
 &dsi_panel_pwr_supply {
@@ -319,7 +319,7 @@
 
 &qupv3_se9_i2c {
 	status = "ok";
-	#include "smb1390.dtsi"
+	#include "../../smb1390.dtsi"
 };
 
 &smb1390 {

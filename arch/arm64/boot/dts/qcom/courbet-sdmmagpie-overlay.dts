@@ -17,9 +17,9 @@
 #include <dt-bindings/interrupt-controller/arm-gic.h>
 #include <dt-bindings/clock/qcom,camcc-sdmmagpie.h>
 
-#include "courbet-sdmmagpie.dtsi"
-#include "courbet-nfc-overlay.dtsi"
-#include "courbet-audio-overlay.dtsi"
+#include "xiaomi/courbet/courbet-sdmmagpie.dtsi"
+#include "xiaomi/courbet/courbet-nfc-overlay.dtsi"
+#include "xiaomi/courbet/courbet-audio-overlay.dtsi"
 
 / {
 	model = "COURBET";

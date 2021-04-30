@@ -17,9 +17,9 @@
 #include <dt-bindings/interrupt-controller/arm-gic.h>
 #include <dt-bindings/clock/qcom,camcc-sdmmagpie.h>
 
-#include "davinci-audio-overlay.dtsi"
-#include "davinci-sdmmagpie.dtsi"
-#include "davinci-nfc-overlay.dtsi"
+#include "xiaomi/davinci/davinci-audio-overlay.dtsi"
+#include "xiaomi/davinci/davinci-sdmmagpie.dtsi"
+#include "xiaomi/davinci/davinci-nfc-overlay.dtsi"
 
 / {
 	model = "DAVINCI";

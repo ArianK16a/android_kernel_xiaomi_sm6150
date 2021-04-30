@@ -17,9 +17,9 @@
 #include <dt-bindings/interrupt-controller/arm-gic.h>
 #include <dt-bindings/clock/qcom,camcc-sdmmagpie.h>
 
-#include "sweet-audio-overlay.dtsi"
-#include "sweet-sdmmagpie.dtsi"
-#include "sweet-nfc-overlay.dtsi"
+#include "xiaomi/sweet/sweet-audio-overlay.dtsi"
+#include "xiaomi/sweet/sweet-sdmmagpie.dtsi"
+#include "xiaomi/sweet/sweet-nfc-overlay.dtsi"
 
 / {
 	model = "SWEET";
