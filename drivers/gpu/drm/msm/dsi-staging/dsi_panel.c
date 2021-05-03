@@ -4187,7 +4187,7 @@ int dsi_panel_update_lp_mode(struct dsi_panel *panel)
 		if (rc)
 			pr_err("[%s] failed to send DSI_CMD_SET_DOZE_HBM cmd, rc=%d\n",
 					panel->name, rc);
-	} else if (panel->bl_config.bl_level <= panel->doze_backlight_threshold) {
+	} else {
 		rc = dsi_panel_tx_cmd_set(panel, DSI_CMD_SET_DOZE_LBM);
 		if (rc)
 			pr_err("[%s] failed to send DSI_CMD_SET_DOZE_LBM cmd, rc=%d\n",
