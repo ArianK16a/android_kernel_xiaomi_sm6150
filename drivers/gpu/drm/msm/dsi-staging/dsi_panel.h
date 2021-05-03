@@ -57,11 +57,6 @@ enum dsi_backlight_type {
 	DSI_BACKLIGHT_MAX,
 };
 
-enum dsi_doze_mode_type {
-	DSI_DOZE_LBM = 0,
-	DSI_DOZE_HBM,
-};
-
 enum bl_update_flag {
 	BL_UPDATE_DELAY_UNTIL_FIRST_FRAME,
 	BL_UPDATE_NONE,
