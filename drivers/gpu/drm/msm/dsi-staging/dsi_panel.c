@@ -670,13 +670,14 @@ static int dsi_panel_update_backlight(struct dsi_panel *panel,
 
 	if (panel->bl_config.bl_remap_flag && panel->bl_config.brightness_max_level &&
 			panel->bl_config.bl_max_level) {
+		int bl_min = panel->bl_config.bl_min_level ? : 1;
+		int bl_range = panel->bl_config.bl_max_level - bl_min;
+
 		/*
 		 * map UI brightness into driver backlight level
-		 *    y = kx+b;
 		 */
-		bl_lvl = (panel->bl_config.bl_max_level - panel->bl_config.bl_min_level) * bl_lvl /
-				panel->bl_config.brightness_max_level + panel->bl_config.bl_min_level;
-		pr_debug("bl_lvl: %d\n", bl_lvl);
+		bl_lvl = bl_min + DIV_ROUND_CLOSEST((bl_lvl - 1) * bl_range,
+				panel->bl_config.brightness_max_level - 1);
 	}
 
 	dsi = &panel->mipi_device;
