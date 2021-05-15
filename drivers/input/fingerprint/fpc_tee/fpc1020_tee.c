@@ -748,6 +748,15 @@ static ssize_t irq_enable_set(struct device *dev,
 }
 static DEVICE_ATTR(irq_enable, S_IWUSR | S_IRUSR | S_IRGRP | S_IWGRP , NULL, irq_enable_set);
 
+static ssize_t power_cfg_set(struct device *dev,
+	struct device_attribute *attr,
+	const char *buf, size_t count)
+{
+	int rc;
+	return rc ? rc : count;
+}
+static DEVICE_ATTR(power_cfg, S_IWUSR, NULL, power_cfg_set);
+
 static struct attribute *attributes[] = {
 	&dev_attr_request_vreg.attr,
 	&dev_attr_pinctl_set.attr,
@@ -761,6 +770,7 @@ static struct attribute *attributes[] = {
 	&dev_attr_irq.attr,
 	&dev_attr_vendor.attr,
 	&dev_attr_fingerdown_wait.attr,
+	&dev_attr_power_cfg.attr,
 	NULL
 };
 
