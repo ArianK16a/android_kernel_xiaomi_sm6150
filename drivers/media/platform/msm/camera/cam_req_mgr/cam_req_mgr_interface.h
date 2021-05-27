@@ -21,6 +21,7 @@
 struct cam_req_mgr_trigger_notify;
 struct cam_req_mgr_error_notify;
 struct cam_req_mgr_add_request;
+struct cam_req_mgr_notify_stop;
 struct cam_req_mgr_device_info;
 struct cam_req_mgr_core_dev_link_setup;
 struct cam_req_mgr_apply_request;
@@ -43,6 +44,7 @@ typedef int (*cam_req_mgr_notify_trigger)(
 	struct cam_req_mgr_trigger_notify *);
 typedef int (*cam_req_mgr_notify_err)(struct cam_req_mgr_error_notify *);
 typedef int (*cam_req_mgr_add_req)(struct cam_req_mgr_add_request *);
+typedef int (*cam_req_mgr_notify_stop)(struct cam_req_mgr_notify_stop *);
 
 /**
  * @brief: cam req mgr to camera device drivers
@@ -69,11 +71,13 @@ typedef int (*cam_req_mgr_dump_req)(struct cam_req_mgr_dump_info *);
  * @notify_trigger : payload for trigger indication event
  * @notify_err     : payload for different error occurred at device
  * @add_req        : payload to inform which device and what request is received
+ * @notify_stop    : payload to inform stop event
  */
 struct cam_req_mgr_crm_cb {
 	cam_req_mgr_notify_trigger  notify_trigger;
 	cam_req_mgr_notify_err      notify_err;
 	cam_req_mgr_add_req         add_req;
+	cam_req_mgr_notify_stop     notify_stop;
 };
 
 /**
@@ -151,6 +155,7 @@ enum cam_req_mgr_device_error {
 	CRM_KMD_ERR_PAGE_FAULT,
 	CRM_KMD_ERR_OVERFLOW,
 	CRM_KMD_ERR_TIMEOUT,
+	CRM_KMD_ERR_STOPPED,
 	CRM_KMD_ERR_MAX,
 };
 
@@ -248,6 +253,14 @@ struct cam_req_mgr_add_request {
 	uint32_t skip_before_applying;
 };
 
+/**
+ * struct cam_req_mgr_notify_stop
+ * @link_hdl             : link identifier
+ *
+ */
+struct cam_req_mgr_notify_stop {
+	int32_t  link_hdl;
+};
 
 /* CRM to KMD devices */
 /**
