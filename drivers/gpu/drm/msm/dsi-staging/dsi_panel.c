@@ -4184,6 +4184,8 @@ int dsi_panel_update_lp_mode(struct dsi_panel *panel)
 {
 	int rc = 0;
 
+	pr_info("doze: Updating lp mode");
+
 	if (!panel) {
 		pr_err("invalid params\n");
 		return -EINVAL;
@@ -4212,6 +4214,8 @@ int dsi_panel_update_lp_mode(struct dsi_panel *panel)
 int dsi_panel_set_lp1(struct dsi_panel *panel)
 {
 	int rc = 0;
+
+	pr_info("doze: Setting lp1 mode");
 
 	if (!panel) {
 		pr_err("invalid params\n");
@@ -4247,6 +4251,8 @@ int dsi_panel_set_lp2(struct dsi_panel *panel)
 {
 	int rc = 0;
 
+	pr_info("doze: Setting lp2 mode");
+
 	if (!panel) {
 		pr_err("invalid params\n");
 		return -EINVAL;
@@ -4267,6 +4273,8 @@ exit:
 int dsi_panel_set_nolp(struct dsi_panel *panel)
 {
 	int rc = 0;
+
+	pr_info("doze: Setting nolp mode");
 
 	if (!panel) {
 		pr_err("invalid params\n");
