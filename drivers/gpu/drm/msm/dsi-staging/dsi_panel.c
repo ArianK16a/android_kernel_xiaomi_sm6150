@@ -668,6 +668,10 @@ static int dsi_panel_update_backlight(struct dsi_panel *panel,
 		return -EINVAL;
 	}
 
+	if (panel->doze_enabled && panel->doze_dark) {
+		bl_lvl = 0;
+	}
+
 	if (panel->bl_config.bl_remap_flag && panel->bl_config.brightness_max_level &&
 			panel->bl_config.bl_max_level) {
 		/*
@@ -770,7 +774,9 @@ static u32 dsi_panel_get_backlight(struct dsi_panel *panel)
 {
 	u32 bl_level;
 
-	if (panel->doze_enabled && panel->bl_config.bl_level >
+	if (panel->doze_enabled && panel->doze_dark)
+		bl_level = 0;
+	else if (panel->doze_enabled && panel->bl_config.bl_level >
 		panel->doze_backlight_threshold)
 		bl_level = panel->bl_config.bl_doze_hbm;
 	else if (panel->doze_enabled && panel->bl_config.bl_level <=
@@ -3689,6 +3695,7 @@ struct dsi_panel *dsi_panel_get(struct device *parent,
 	if (rc)
 		pr_debug("failed to parse esd config, rc=%d\n", rc);
 
+	panel->doze_dark = false;
 	panel->doze_enabled = false;
 	panel->power_mode = SDE_MODE_DPMS_OFF;
 	drm_panel_init(&panel->drm_panel);
@@ -4182,7 +4189,12 @@ int dsi_panel_update_lp_mode(struct dsi_panel *panel)
 		return -EINVAL;
 	}
 
-	if (panel->bl_config.bl_level > panel->doze_backlight_threshold) {
+	if (panel->doze_dark) {
+		rc = dsi_panel_tx_cmd_set(panel, DSI_CMD_SET_NOLP);
+		if (rc)
+			pr_err("[%s] failed to send DSI_CMD_SET_NOLP cmd, rc=%d\n",
+					panel->name, rc);
+	} else if (panel->bl_config.bl_level > panel->doze_backlight_threshold) {
 		rc = dsi_panel_tx_cmd_set(panel, DSI_CMD_SET_DOZE_HBM);
 		if (rc)
 			pr_err("[%s] failed to send DSI_CMD_SET_DOZE_HBM cmd, rc=%d\n",
@@ -4225,7 +4237,7 @@ int dsi_panel_set_lp1(struct dsi_panel *panel)
 		dsi_pwr_panel_regulator_mode_set(&panel->power_info,
 			"ibb", REGULATOR_MODE_IDLE);
 
-	rc = dsi_panel_update_lp_mode(panel);
+	rc = dsi_panel_set_backlight(panel, panel->bl_config.bl_level);
 exit:
 	mutex_unlock(&panel->panel_lock);
 	return rc;
@@ -4246,7 +4258,7 @@ int dsi_panel_set_lp2(struct dsi_panel *panel)
 
 	panel->doze_enabled = true;
 
-	rc = dsi_panel_update_lp_mode(panel);
+	rc = dsi_panel_set_backlight(panel, panel->bl_config.bl_level);
 exit:
 	mutex_unlock(&panel->panel_lock);
 	return rc;
@@ -4276,14 +4288,13 @@ int dsi_panel_set_nolp(struct dsi_panel *panel)
 		dsi_pwr_panel_regulator_mode_set(&panel->power_info,
 			"ibb", REGULATOR_MODE_NORMAL);
 	rc = dsi_panel_tx_cmd_set(panel, DSI_CMD_SET_NOLP);
-	if (rc)
+	if (rc) {
 		pr_err("[%s] failed to send DSI_CMD_SET_NOLP cmd, rc=%d\n",
 		       panel->name, rc);
+		goto exit;
+	}
 
-	if (panel->bl_config.dcs_type_ss_eb ||
-			panel->bl_config.xiaomi_f4_36_flag ||
-			panel->bl_config.xiaomi_f4_41_flag)
-		dsi_panel_set_backlight(panel, panel->bl_config.bl_level);
+	rc = dsi_panel_set_backlight(panel, panel->bl_config.bl_level);
 exit:
 	mutex_unlock(&panel->panel_lock);
 	return rc;

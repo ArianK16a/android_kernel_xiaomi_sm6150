@@ -5173,6 +5173,62 @@ error:
 	return ret == 0 ? count : ret;
 }
 
+static ssize_t sysfs_doze_dark_read(struct device *dev,
+	struct device_attribute *attr, char *buf)
+{
+	struct dsi_display *display = dev_get_drvdata(dev);
+	if (!display->panel)
+		return 0;
+
+	return scnprintf(buf, PAGE_SIZE, "%d\n", display->panel->doze_dark);
+}
+
+static ssize_t sysfs_doze_dark_write(struct device *dev,
+	struct device_attribute *attr, const char *buf, size_t count)
+{
+	struct dsi_display *display = dev_get_drvdata(dev);
+	int ret, doze_dark;
+
+	if (!display->panel)
+		return -EINVAL;
+
+	ret = kstrtoint(buf, 2, &doze_dark);
+	if (ret) {
+		pr_err("kstrtoint failed. ret=%d\n", ret);
+		return ret;
+	}
+
+	mutex_lock(&display->display_lock);
+
+	display->panel->doze_dark = doze_dark;
+	if (!dsi_panel_initialized(display->panel))
+		goto error;
+
+	ret = dsi_display_clk_ctrl(display->dsi_clk_handle,
+			DSI_CORE_CLK, DSI_CLK_ON);
+	if (ret) {
+		pr_err("[%s] failed to enable DSI core clocks, rc=%d\n",
+				display->name, ret);
+		goto error;
+	}
+
+	ret = dsi_panel_set_backlight(display->panel,
+			display->panel->bl_config.bl_level);
+	if (ret)
+		pr_err("unable to set backight\n");
+
+	ret = dsi_display_clk_ctrl(display->dsi_clk_handle,
+			DSI_CORE_CLK, DSI_CLK_OFF);
+	if (ret) {
+		pr_err("[%s] failed to disable DSI core clocks, rc=%d\n",
+				display->name, ret);
+		goto error;
+	}
+error:
+	mutex_unlock(&display->display_lock);
+	return ret == 0 ? count : ret;
+}
+
 static DEVICE_ATTR(fod_ui, 0444,
 			sysfs_fod_ui_read,
 			NULL);
@@ -5185,10 +5241,15 @@ static DEVICE_ATTR(dc_enable, 0644,
 			sysfs_dc_enable_read,
 			sysfs_dc_enable_write);
 
+static DEVICE_ATTR(doze_dark, 0644,
+			sysfs_doze_dark_read,
+			sysfs_doze_dark_write);
+
 static struct attribute *display_fs_attrs[] = {
 	&dev_attr_fod_ui.attr,
 	&dev_attr_hbm.attr,
 	&dev_attr_dc_enable.attr,
+	&dev_attr_doze_dark.attr,
 	NULL,
 };
 static struct attribute_group display_fs_attrs_group = {

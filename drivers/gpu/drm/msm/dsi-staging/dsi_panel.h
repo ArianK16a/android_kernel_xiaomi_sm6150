@@ -243,6 +243,7 @@ struct dsi_panel {
 	int power_mode;
 	enum dsi_panel_physical_type panel_type;
 
+	bool doze_dark;
 	bool doze_enabled;
 	u32 doze_backlight_threshold;
 
