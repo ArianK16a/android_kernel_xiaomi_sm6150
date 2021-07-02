@@ -4192,16 +4192,19 @@ int dsi_panel_update_lp_mode(struct dsi_panel *panel)
 	}
 
 	if (panel->doze_dark) {
+		pr_info("doze: Setting nolp mode");
 		rc = dsi_panel_tx_cmd_set(panel, DSI_CMD_SET_NOLP);
 		if (rc)
 			pr_err("[%s] failed to send DSI_CMD_SET_NOLP cmd, rc=%d\n",
 					panel->name, rc);
 	} else if (panel->bl_config.bl_level > panel->doze_backlight_threshold) {
+		pr_info("doze: Setting HBM mode");
 		rc = dsi_panel_tx_cmd_set(panel, DSI_CMD_SET_DOZE_HBM);
 		if (rc)
 			pr_err("[%s] failed to send DSI_CMD_SET_DOZE_HBM cmd, rc=%d\n",
 					panel->name, rc);
 	} else if (panel->bl_config.bl_level <= panel->doze_backlight_threshold) {
+		pr_info("doze: Setting LBM mode");
 		rc = dsi_panel_tx_cmd_set(panel, DSI_CMD_SET_DOZE_LBM);
 		if (rc)
 			pr_err("[%s] failed to send DSI_CMD_SET_DOZE_LBM cmd, rc=%d\n",
@@ -4295,6 +4298,7 @@ int dsi_panel_set_nolp(struct dsi_panel *panel)
 		panel->power_mode == SDE_MODE_DPMS_LP2))
 		dsi_pwr_panel_regulator_mode_set(&panel->power_info,
 			"ibb", REGULATOR_MODE_NORMAL);
+
 	rc = dsi_panel_tx_cmd_set(panel, DSI_CMD_SET_NOLP);
 	if (rc) {
 		pr_err("[%s] failed to send DSI_CMD_SET_NOLP cmd, rc=%d\n",
@@ -4827,6 +4831,7 @@ int dsi_panel_apply_hbm_mode(struct dsi_panel *panel)
 		type = type_map[0];
 
 	mutex_lock(&panel->panel_lock);
+	pr_info("setting fod hbm mode %d", panel->hbm_mode);
 	rc = dsi_panel_tx_cmd_set(panel, type);
 	mutex_unlock(&panel->panel_lock);
 
