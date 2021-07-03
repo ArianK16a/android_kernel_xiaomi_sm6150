@@ -2092,7 +2092,7 @@ static int gtp_set_cur_value(int gtp_mode, int gtp_value)
 	u8 temp_value = 0;
 	int ret = 0;
 	int i = 0;
-	int suspended = 0;
+	bool should_suspend;
 
 	struct goodix_ts_device *dev = goodix_core_data->ts_dev;
 	ts_info("mode:%d, value:%d", gtp_mode, gtp_value);
@@ -2104,8 +2104,8 @@ static int gtp_set_cur_value(int gtp_mode, int gtp_value)
 	}
 
 	if (gtp_mode == Touch_Fod_Enable && goodix_core_data) {
-		suspended = atomic_read(&goodix_core_data->suspended);
-		if (suspended) {
+		should_suspend = atomic_read(&goodix_core_data->suspended) && gtp_value != -1;
+		if (should_suspend) {
 			goodix_ts_resume(goodix_core_data);
 		}
 		goodix_core_data->fod_status = gtp_value;
@@ -2118,7 +2118,7 @@ static int gtp_set_cur_value(int gtp_mode, int gtp_value)
 			goodix_core_data->gesture_enabled = goodix_core_data->double_wakeup |
 				goodix_core_data->fod_enabled | goodix_core_data->aod_status;
 		}
-		if (suspended) {
+		if (should_suspend) {
 			goodix_ts_suspend(goodix_core_data);
 		}
 		return 0;
