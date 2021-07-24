@@ -19,6 +19,24 @@
 
 #include "sm6150-audio-overlay.dtsi"
 
+&firmware {
+	android {
+		vbmeta {
+			parts = "vbmeta,boot,system,vendor,dtbo,recovery";
+		};
+		fstab {
+			vendor {
+				fsmgr_flags = "wait,avb";
+			};
+		};
+	};
+};
+
+&wdog {
+	qcom,bark-time = <20000>;
+	qcom,pet-time = <15000>;
+};
+
 &soc {
 	/*
 	fpc1020 {
@@ -117,6 +135,8 @@
 
 	qcom,vddp-ref-clk-supply = <&pm6150l_l3>;
 	qcom,vddp-ref-clk-max-microamp = <100>;
+
+	spm-level = <3>;
 
 	status = "ok";
 };
@@ -308,4 +328,104 @@
 			no-map;
 			reg = <0x0 0x85d00000 0x0 0x100000>;
 		};
+};
+
+&pil_adsp_mem {
+	reg = <0 0x95700000 0 0x2600000>;
+};
+
+&wlan_msa_mem {
+	reg = <0 0x97d00000 0 0x180000>;
+};
+
+&npu_mem {
+	reg = <0 0x97e80000 0 0x80000>;
+};
+
+&pil_ipa_fw_mem {
+	reg = <0 0x97f00000 0 0x10000>;
+};
+
+&pil_ipa_gsi_mem {
+	reg = <0 0x97f10000 0 0x5000>;
+};
+
+&pil_gpu_mem {
+	reg = <0 0x97f15000 0 0x2000>;
+};
+
+&secure_display_memory {
+	size = <0 0x8c00000>;
+};
+
+&qupv3_se9_i2c {
+	status = "disabled";
+};
+
+&fsa4480 {
+	status = "disabled";
+};
+
+&pm6150_vadc {
+	rf_pa0_therm {
+		status = "disabled";
+	};
+
+	rf_pa1_therm {
+		status = "disabled";
+	};
+
+	quiet_therm {
+		status = "disabled";
+	};
+};
+
+&pm6150_adc_tm {
+	xo_therm {
+		status = "disabled";
+	};
+
+	rf_pa0_therm {
+		status = "disabled";
+	};
+
+	rf_pa1_therm {
+		status = "disabled";
+	};
+
+	quiet_therm {
+		status = "disabled";
+	};
+};
+
+&pm6150l_vadc {
+	conn_therm {
+		status = "disabled";
+	};
+
+	smb_therm {
+		status = "disabled";
+	};
+
+	camera_ftherm {
+		status = "disabled";
+	};
+
+	nvm_therm {
+		status = "disabled";
+	};
+};
+
+&pm6150l_adc_tm {
+	conn_therm {
+		status = "disabled";
+	};
+
+	camera_ftherm {
+		status = "disabled";
+	};
+
+	nvm_therm {
+		status = "disabled";
+	};
 };
