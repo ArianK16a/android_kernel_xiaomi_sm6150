@@ -38,25 +38,3 @@
 &sm6150_snd {
 	/delete-property/ fsa4480-i2c-handle;
 };
-
-&icnss {
-	/delete-property/ vdd-3.3-ch1-supply;
-};
-
-&pm6150_adc_tm {
-	/delete-property/ io-channels;
-};
-
-&pm6150l_vadc {
-	/delete-property/ pinctrl-names;
-	/delete-property/ pinctrl-0;
-};
-
-&nvm_therm_default {
-	/delete-property/ pins;
-	/delete-property/ bias-high-impedance;
-};
-
-&pm6150l_adc_tm {
-	/delete-property/ io-channels;
-};
