@@ -2,11 +2,14 @@
 #
 # Makefile for the linux exFAT filesystem support.
 #
+
 ifneq ($(KERNELRELEASE),)
+# Called from inline kernel build
+# DKMS_DEFINE
 obj-$(CONFIG_EXFAT_FS) += exfat.o
 
-exfat-y	:= inode.o namei.o dir.o super.o fatent.o cache.o nls.o misc.o \
-	   file.o balloc.o
+exfat-objs	:= inode.o namei.o dir.o super.o fatent.o cache.o nls.o misc.o \
+	   file.o balloc.o xattr.o
 else
 # Called from external kernel module build
 
